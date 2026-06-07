@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Log · Outreach Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { darkMode: 'class' };
+    </script>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="page-frame antialiased">
+    <header class="flex-none border-b border-white/5 bg-[rgb(11,13,22)]/70 backdrop-blur-xl z-10">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+        <a href="/" class="flex items-center gap-2.5 text-sm font-semibold tracking-tight">
+          <span class="relative inline-flex h-6 w-6 items-center justify-center rounded-lg" style="background:linear-gradient(135deg,rgb(255,138,101),rgb(244,96,54));">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 text-white" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          </span>
+          <span>Outreach Studio</span>
+        </a>
+        <nav class="flex items-center gap-1">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/companies.html" class="nav-link">Companies</a>
+          <a href="/log.html" class="nav-link active">Log</a>
+          <a href="/settings.html" class="nav-link">Settings</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-1 scroll-y">
+    <div class="mx-auto max-w-6xl px-6 py-6">
+      <div class="flex items-end justify-between gap-3">
+        <div>
+          <h1 class="text-2xl font-semibold tracking-tight">Activity &amp; Log</h1>
+          <p class="mt-1 text-sm" style="color:rgb(var(--ink-muted));">Live campaign status, AI spend, recent events — plus your full outreach history.</p>
+        </div>
+        <button id="log-export" type="button"
+          class="rounded-md border border-slate-700 px-3 py-2 text-sm font-medium text-[rgb(var(--ink-soft))] hover:bg-white/[0.04]">
+          Export CSV
+        </button>
+      </div>
+
+      <!-- ── STATUS OVERVIEW ───────────────────────────────────────────────── -->
+      <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3" role="region" aria-label="Campaign status overview">
+
+        <!-- IN FLIGHT -->
+        <div class="card p-5 slide-in" style="animation-delay:0ms">
+          <div class="mission-label mb-3">
+            <span>in flight</span>
+            <a href="/companies.html" class="text-[0.6rem] hover:text-[rgb(var(--coral-soft))] transition-colors normal-case font-normal tracking-normal">all campaigns →</a>
+          </div>
+          <ul id="log-campaigns" class="space-y-2 min-h-[2.5rem]">
+            <li class="flex items-center gap-2 py-0.5">
+              <span class="loading-dots" style="color:rgb(var(--ink-muted));"><span></span><span></span><span></span></span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- AI SPEND -->
+        <div class="card p-5 slide-in" style="animation-delay:55ms">
+          <div class="mission-label mb-3"><span>ai spend</span></div>
+          <div class="flex items-baseline gap-1.5 flex-wrap">
+            <span id="log-cost-usd" class="text-lg font-bold tabular-nums" style="color:rgb(var(--coral-soft));">…</span>
+            <span class="text-[0.6rem]" style="color:rgb(var(--border-strong));">·</span>
+            <span class="text-xs tabular-nums" style="color:rgb(var(--ink-muted));"><span id="log-cost-drafts">0</span> drafts</span>
+          </div>
+          <div class="mt-1.5 flex items-center gap-1 flex-wrap">
+            <span class="text-[0.65rem] tabular-nums" style="color:rgb(var(--ink-faint));"><span id="log-cost-input">0</span> in</span>
+            <span class="text-[0.55rem]" style="color:rgb(var(--border-strong));">·</span>
+            <span class="text-[0.65rem] tabular-nums" style="color:rgb(var(--ink-faint));"><span id="log-cost-output">0</span> out</span>
+          </div>
+          <p id="log-cost-basis" class="mt-1 text-[0.6rem] truncate" style="color:rgb(var(--ink-faint));"></p>
+        </div>
+
+        <!-- RECENT ACTIVITY -->
+        <div class="card p-5 slide-in" style="animation-delay:110ms">
+          <div class="mission-label mb-3">
+            <span>recent activity</span>
+            <span class="text-[0.55rem] normal-case font-normal tracking-normal" style="color:rgb(var(--ink-faint));">last 20</span>
+          </div>
+          <ol id="log-activity" class="space-y-0.5 max-h-44 overflow-y-auto pr-1">
+            <li class="flex items-center gap-2 py-1" style="color:rgb(var(--ink-muted));">
+              <span class="loading-dots"><span></span><span></span><span></span></span>
+            </li>
+          </ol>
+        </div>
+
+      </div>
+
+      <!-- ── EMAIL SEND LOG ─────────────────────────────────────────────────── -->
+      <div class="mt-8 flex items-center gap-3">
+        <h2 class="text-base font-semibold tracking-tight">Email send log</h2>
+        <div class="h-px flex-1" style="background:rgb(var(--border));"></div>
+      </div>
+
+      <form id="log-filters" class="mt-4 grid grid-cols-1 gap-3 card p-4 sm:grid-cols-2 md:grid-cols-5">
+        <label class="block text-xs">
+          <span class="block font-medium text-[rgb(var(--ink-soft))]">Company</span>
+          <select name="company_id" class="mt-1 w-full rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-2 py-1.5 text-sm text-[rgb(var(--ink))]">
+            <option value="">All</option>
+          </select>
+        </label>
+
+        <label class="block text-xs">
+          <span class="block font-medium text-[rgb(var(--ink-soft))]">Status</span>
+          <select name="status" class="mt-1 w-full rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-2 py-1.5 text-sm text-[rgb(var(--ink))]">
+            <option value="all">All</option>
+            <option value="sent">Sent</option>
+            <option value="replied">Replied</option>
+            <option value="bounced">Bounced</option>
+          </select>
+        </label>
+
+        <label class="block text-xs">
+          <span class="block font-medium text-[rgb(var(--ink-soft))]">From</span>
+          <input type="date" name="date_from" class="mt-1 w-full rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-2 py-1.5 text-sm text-[rgb(var(--ink))]" />
+        </label>
+
+        <label class="block text-xs">
+          <span class="block font-medium text-[rgb(var(--ink-soft))]">To</span>
+          <input type="date" name="date_to" class="mt-1 w-full rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-2 py-1.5 text-sm text-[rgb(var(--ink))]" />
+        </label>
+
+        <label class="block text-xs">
+          <span class="block font-medium text-[rgb(var(--ink-soft))]">Contains</span>
+          <input type="search" name="q" placeholder="recipient or subject" class="mt-1 w-full rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-2 py-1.5 text-sm text-[rgb(var(--ink))]" />
+        </label>
+      </form>
+
+      <p id="log-summary" class="mt-4 text-sm text-[rgb(var(--ink-muted))]"></p>
+
+      <section class="mt-2 overflow-hidden card">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead class="bg-white/[0.02] text-left text-xs uppercase tracking-wider text-[rgb(var(--ink-muted))]">
+              <tr>
+                <th class="px-3 py-2 font-medium">When</th>
+                <th class="px-3 py-2 font-medium">Company</th>
+                <th class="px-3 py-2 font-medium">Recipient</th>
+                <th class="px-3 py-2 font-medium">Subject</th>
+                <th class="px-3 py-2 font-medium">Status</th>
+                <th class="px-3 py-2 text-right font-medium">Step</th>
+              </tr>
+            </thead>
+            <tbody id="log-tbody">
+              <tr><td colspan="6" class="px-4 py-10 text-center text-sm text-[rgb(var(--ink-faint))]">Fetching your sends...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <nav class="mt-4 flex items-center justify-between text-sm text-[rgb(var(--ink-muted))]">
+        <button id="log-prev" type="button" class="rounded-md px-3 py-1.5 disabled:opacity-30 hover:bg-white/5">Prev</button>
+        <span id="log-page">page 1</span>
+        <button id="log-next" type="button" class="rounded-md px-3 py-1.5 disabled:opacity-30 hover:bg-white/5">Next</button>
+      </nav>
+    </div>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

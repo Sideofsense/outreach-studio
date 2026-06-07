@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Settings · Outreach Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' };</script>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="page-frame antialiased">
+
+    <!-- HEADER -->
+    <header class="flex-none border-b border-white/5 bg-[rgb(11,13,22)]/70 backdrop-blur-xl z-10">
+      <div class="flex items-center justify-between px-8 py-3">
+        <a href="/" class="flex items-center gap-2.5 text-sm font-semibold tracking-tight">
+          <span class="relative inline-flex h-6 w-6 items-center justify-center rounded-lg" style="background:linear-gradient(135deg,rgb(255,138,101),rgb(244,96,54));">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 text-white" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          </span>
+          <span>Outreach Studio</span>
+        </a>
+        <nav class="flex items-center gap-1">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/companies.html" class="nav-link">Companies</a>
+          <a href="/log.html" class="nav-link">Log</a>
+          <a href="/settings.html" class="nav-link active">Settings</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- TAB BAR -->
+    <div class="flex-none border-b border-white/5 bg-[rgb(11,13,22)]/40 px-8">
+      <nav class="flex gap-0" id="settings-tab-bar" role="tablist">
+        <button class="settings-tab active" data-tab="profile" role="tab" aria-selected="true">Profile</button>
+        <button class="settings-tab" data-tab="credentials" role="tab" aria-selected="false">Credentials</button>
+        <button class="settings-tab" data-tab="throttle" role="tab" aria-selected="false">Throttle</button>
+        <button class="settings-tab" data-tab="templates" role="tab" aria-selected="false">Templates</button>
+      </nav>
+    </div>
+
+    <!-- TAB CONTENT (scrollable) -->
+    <main class="flex-1 scroll-y">
+
+      <!-- ============ PROFILE TAB ============ -->
+      <div id="tab-profile" class="tab-panel mx-auto max-w-2xl px-6 py-8 space-y-6">
+        <header>
+          <h1 class="text-xl font-semibold tracking-tight">Your profile</h1>
+          <p class="mt-1 text-sm" style="color:rgb(var(--ink-muted));">The AI uses this when drafting every email. The better this is, the sharper the hooks.</p>
+        </header>
+        <section class="card">
+          <div class="p-5">
+            <form id="profile-form" class="space-y-4 text-sm">
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <label class="block">
+                  <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Full name</span>
+                  <input name="name" type="text" class="w-full rounded-lg px-3 py-2" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+                </label>
+                <label class="block">
+                  <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">First name</span>
+                  <input name="first_name" type="text" class="w-full rounded-lg px-3 py-2" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+                </label>
+                <label class="block">
+                  <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Current role</span>
+                  <input name="current_role" type="text" class="w-full rounded-lg px-3 py-2" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+                </label>
+                <label class="block">
+                  <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Current company</span>
+                  <input name="current_company" type="text" class="w-full rounded-lg px-3 py-2" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+                </label>
+                <label class="block">
+                  <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Location</span>
+                  <input name="location" type="text" class="w-full rounded-lg px-3 py-2" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+                </label>
+                <label class="block">
+                  <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Reply-to email</span>
+                  <input name="email" type="email" class="w-full rounded-lg px-3 py-2" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+                </label>
+              </div>
+              <label class="block">
+                <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">LinkedIn URL</span>
+                <input name="linkedin" type="url" class="w-full rounded-lg px-3 py-2" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+              </label>
+              <label class="block">
+                <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Summary <span class="font-normal" style="color:rgb(var(--ink-faint));">keep it under 80 words</span></span>
+                <textarea name="summary" rows="3" class="w-full rounded-lg px-3 py-2 resize-none" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));"></textarea>
+              </label>
+              <label class="block">
+                <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Key achievements <span class="font-normal" style="color:rgb(var(--ink-faint));">one per line, action + outcome</span></span>
+                <textarea name="key_achievements" rows="5" class="w-full rounded-lg px-3 py-2 font-mono text-xs leading-6 resize-none" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));"></textarea>
+              </label>
+              <div class="flex items-center justify-end gap-3 pt-1">
+                <p data-role="profile-error" class="text-xs mr-auto" style="color:rgb(var(--rose));"></p>
+                <p data-role="profile-saved" class="text-xs mr-2" style="color:rgb(var(--emerald));"></p>
+                <button id="user-profile-save" type="button" class="btn-coral text-sm">Save profile</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <div class="rounded-xl border border-white/5 p-4 text-sm" style="background:rgba(0,0,0,0.2);">
+          <p class="font-medium text-xs mb-2" style="color:rgb(var(--ink-soft));">Tips for the summary</p>
+          <ul class="space-y-1 text-xs" style="color:rgb(var(--ink-muted));">
+            <li>Concrete beats abstract. "Built RAGAS eval gates" beats "Passionate about AI products".</li>
+            <li>Numbers and scale signals stick. Vague outcomes don't.</li>
+            <li>Under 80 words. This is positioning, not your CV.</li>
+            <li>5-7 achievements. Lead with the action, not the context.</li>
+          </ul>
+        </div>
+
+        <!-- ===== Default CV — set once, reuse on every campaign ===== -->
+        <header class="pt-2">
+          <h2 class="text-lg font-semibold tracking-tight">Default CV</h2>
+          <p class="mt-1 text-sm" style="color:rgb(var(--ink-muted));">Upload your CV once here and it attaches to every campaign automatically — and its text helps the AI write sharper emails. A campaign can still upload its own CV to override this.</p>
+        </header>
+        <section class="card">
+          <div class="p-5">
+            <div id="default-cv-current" class="mb-3 text-sm" style="color:rgb(var(--ink-faint));">Checking…</div>
+            <form id="default-cv-form" class="flex flex-col gap-3 text-sm">
+              <input type="file" name="file" accept=".pdf,application/pdf" required
+                class="block w-full cursor-pointer rounded-lg border px-3 py-2 file:mr-3 file:rounded-md file:border-0 file:bg-[rgb(var(--coral))] file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white hover:file:bg-[rgb(var(--coral-deep))]"
+                style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink-soft));" />
+              <div class="flex items-center justify-end gap-3">
+                <p data-role="default-cv-msg" class="text-xs mr-auto"></p>
+                <button type="submit" class="btn-coral text-sm">Upload default CV</button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============ CREDENTIALS TAB ============ -->
+      <div id="tab-credentials" class="tab-panel hidden mx-auto max-w-2xl px-6 py-8 space-y-6">
+        <header>
+          <h1 class="text-xl font-semibold tracking-tight">Credentials</h1>
+          <p class="mt-1 text-sm" style="color:rgb(var(--ink-muted));">API keys and email config live in <code class="rounded px-1.5 py-0.5 text-xs" style="background:rgb(var(--bg-elevated));">.env</code> and need a server restart when changed.</p>
+        </header>
+
+        <!-- Live status grid -->
+        <section class="card">
+          <header class="border-b border-white/5 px-5 py-3 flex items-center justify-between">
+            <h2 class="eyebrow">connection status</h2>
+            <button id="status-refresh" type="button" class="text-xs rounded-md px-2 py-1 hover:bg-white/[0.04] transition-colors" style="color:rgb(var(--ink-muted));">Refresh</button>
+          </header>
+          <div id="connections-body" class="p-5 text-sm" style="color:rgb(var(--ink-muted));">
+            <div class="flex items-center gap-2"><span class="loading-dots"><span></span><span></span><span></span></span><span class="text-xs" style="color:rgb(var(--ink-faint));">checking connections</span></div>
+          </div>
+        </section>
+
+        <!-- LLM setup -->
+        <section class="card">
+          <header class="border-b border-white/5 px-5 py-3">
+            <h2 class="text-sm font-semibold" style="color:rgb(var(--ink-soft));">LLM provider</h2>
+            <p class="mt-0.5 text-xs" style="color:rgb(var(--ink-faint));">Currently: <code id="llm-current" class="rounded px-1 py-0.5" style="background:rgb(var(--bg-elevated-2));">loading...</code>. Change via <code class="rounded px-1 py-0.5" style="background:rgb(var(--bg-elevated-2));">LLM_PROVIDER</code> in .env</p>
+          </header>
+          <div class="space-y-4 p-5 text-sm">
+            <details class="rounded-lg p-4" style="border:1px solid rgba(52,211,153,0.2); background:rgba(52,211,153,0.04);" open>
+              <summary class="cursor-pointer font-medium" style="color:rgb(var(--emerald));">Option A: Ollama (free, runs on your laptop)</summary>
+              <ol class="mt-3 list-decimal space-y-2 pl-5 text-xs leading-5" style="color:rgb(var(--ink-soft));">
+                <li>Install from <a class="underline" style="color:rgb(var(--coral-soft));" href="https://ollama.com/download" target="_blank" rel="noreferrer">ollama.com/download</a></li>
+                <li>Pull a model: <code class="block mt-1 rounded px-3 py-2 font-mono" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border));">ollama pull llama3.1:8b</code></li>
+                <li>Set in .env:
+                  <pre class="mt-1 rounded px-3 py-2 font-mono text-xs" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border));">LLM_PROVIDER=ollama
+OLLAMA_HOST=http://localhost:11434
+OLLAMA_MODEL=llama3.1:8b</pre>
+                </li>
+                <li>Restart server, then test:</li>
+              </ol>
+              <div class="mt-3 flex items-center gap-3">
+                <button data-test="ollama" class="btn-coral text-xs px-3 py-1.5">Test Ollama</button>
+                <p data-result="ollama" class="text-xs" style="color:rgb(var(--ink-muted));"></p>
+              </div>
+              <p class="mt-2 text-xs" style="color:rgb(var(--ink-faint));">Quality note: 8B local models follow "no banned words" rules less reliably than Sonnet. Larger models (70B, 32B) close the gap significantly.</p>
+            </details>
+
+            <details class="rounded-lg p-4" style="border:1px solid rgba(167,139,250,0.2); background:rgba(167,139,250,0.04);">
+              <summary class="cursor-pointer font-medium" style="color:rgb(var(--coral-soft));">Option B: Anthropic Claude Sonnet (paid, best quality, ~$1-$2 per 500 emails)</summary>
+              <ol class="mt-3 list-decimal space-y-2 pl-5 text-xs leading-5" style="color:rgb(var(--ink-soft));">
+                <li>Open <a class="underline" style="color:rgb(var(--coral-soft));" href="https://console.anthropic.com/" target="_blank" rel="noreferrer">console.anthropic.com</a>, add billing ($5 covers ~2500 emails)</li>
+                <li>API Keys tab, create key named "Outreach Studio"</li>
+                <li>Set in .env:
+                  <pre class="mt-1 rounded px-3 py-2 font-mono text-xs" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border));">LLM_PROVIDER=anthropic
+ANTHROPIC_API_KEY=sk-ant-api03-your-key
+ANTHROPIC_MODEL=claude-sonnet-4-5</pre>
+                </li>
+                <li>Restart server, then test:</li>
+              </ol>
+              <div class="mt-3 flex items-center gap-3">
+                <button data-test="anthropic" class="btn-coral text-xs px-3 py-1.5">Test Anthropic</button>
+                <p data-result="anthropic" class="text-xs" style="color:rgb(var(--ink-muted));"></p>
+              </div>
+              <p class="mt-2 text-xs" style="color:rgb(var(--ink-faint));">Claude Pro/Max chat subscriptions do NOT include API access. Separate billing required.</p>
+            </details>
+          </div>
+        </section>
+
+        <!-- Gmail setup -->
+        <section class="card">
+          <header class="border-b border-white/5 px-5 py-3">
+            <h2 class="text-sm font-semibold" style="color:rgb(var(--ink-soft));">Gmail App Password</h2>
+            <p class="mt-0.5 text-xs" style="color:rgb(var(--ink-faint));">One 16-character password for both sending (SMTP) and reading replies (IMAP).</p>
+          </header>
+          <div class="space-y-4 p-5 text-sm">
+            <details class="rounded-lg border border-white/5 p-3 text-xs" style="background:rgba(0,0,0,0.2);">
+              <summary class="cursor-pointer font-medium" style="color:rgb(var(--ink-soft));">First: enable 2-Step Verification if you haven't yet</summary>
+              <ol class="mt-2 list-decimal space-y-1 pl-5 text-xs" style="color:rgb(var(--ink-muted));">
+                <li>Go to <a class="underline" style="color:rgb(var(--coral-soft));" href="https://myaccount.google.com/security" target="_blank" rel="noreferrer">myaccount.google.com/security</a></li>
+                <li>"How you sign in to Google" - click 2-Step Verification - follow prompts</li>
+              </ol>
+            </details>
+            <ol class="list-decimal space-y-2 pl-5 text-xs leading-5" style="color:rgb(var(--ink-soft));">
+              <li>Go to <a class="underline" style="color:rgb(var(--coral-soft));" href="https://myaccount.google.com/apppasswords" target="_blank" rel="noreferrer">myaccount.google.com/apppasswords</a></li>
+              <li>Select app: "Other (custom name)" - type "Outreach Studio" - Generate</li>
+              <li>Copy the 16-char password, remove spaces: <code class="rounded px-1" style="background:rgb(var(--bg-elevated-2));">abcdefghijklmnop</code></li>
+              <li>Set in .env:
+                <pre class="mt-1 rounded px-3 py-2 font-mono text-xs" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border));">SMTP_USER=you@gmail.com
+SMTP_PASSWORD=abcdefghijklmnop
+SMTP_FROM_NAME=Your Name
+
+IMAP_USER=you@gmail.com
+IMAP_PASSWORD=abcdefghijklmnop</pre>
+              </li>
+              <li>Restart server, then test both:</li>
+            </ol>
+            <div class="flex flex-wrap gap-4">
+              <div class="flex items-center gap-3">
+                <button data-test="smtp" class="btn-coral text-xs px-3 py-1.5">Test SMTP</button>
+                <p data-result="smtp" class="text-xs" style="color:rgb(var(--ink-muted));"></p>
+              </div>
+              <div class="flex items-center gap-3">
+                <button data-test="imap" class="btn-coral text-xs px-3 py-1.5">Test IMAP</button>
+                <p data-result="imap" class="text-xs" style="color:rgb(var(--ink-muted));"></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Test send guide -->
+        <section class="card p-5 text-sm">
+          <h2 class="eyebrow mb-3">verify end-to-end</h2>
+          <ol class="list-decimal space-y-1 pl-5 text-xs leading-5" style="color:rgb(var(--ink-soft));">
+            <li>Go to <a class="hover:underline" style="color:rgb(var(--coral-soft));" href="/companies.html">Companies</a> - New Campaign - name it "Test"</li>
+            <li>Upload a CSV with one row: your own email</li>
+            <li>Initiate outreach - review the draft - send to yourself</li>
+            <li>Email lands in inbox (check spam if not - mark Not Spam)</li>
+          </ol>
+        </section>
+      </div>
+
+      <!-- ============ THROTTLE TAB ============ -->
+      <div id="tab-throttle" class="tab-panel hidden mx-auto max-w-2xl px-6 py-8 space-y-6">
+        <header>
+          <h1 class="text-xl font-semibold tracking-tight">Throttle</h1>
+          <p class="mt-1 text-sm" style="color:rgb(var(--ink-muted));">These protect your Gmail reputation. The defaults are sane. Don't touch until you've sent 100+ emails.</p>
+        </header>
+
+        <section class="card">
+          <header class="flex items-center justify-between border-b border-white/5 px-5 py-3">
+            <h2 class="eyebrow">send limits</h2>
+            <button id="throttle-reset" type="button" class="text-xs rounded-md px-2 py-1 hover:bg-white/[0.04] transition-colors" style="color:rgb(var(--ink-muted));">Reset to .env defaults</button>
+          </header>
+          <form id="throttle-form" class="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 lg:grid-cols-3 text-sm">
+            <label class="block">
+              <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Global throttle (seconds between sends)</span>
+              <input type="number" name="globalSeconds" min="0" max="86400"
+                class="w-full rounded-lg px-3 py-1.5 text-sm" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+            </label>
+            <label class="block">
+              <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Per-domain limit (per hour)</span>
+              <input type="number" name="perDomainPerHour" min="1" max="100"
+                class="w-full rounded-lg px-3 py-1.5 text-sm" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+            </label>
+            <label class="block">
+              <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Daily cap</span>
+              <input type="number" name="dailyCap" min="1" max="10000"
+                class="w-full rounded-lg px-3 py-1.5 text-sm" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+            </label>
+            <label class="block">
+              <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Working hours start (0-23)</span>
+              <input type="number" name="workingHoursStart" min="0" max="23"
+                class="w-full rounded-lg px-3 py-1.5 text-sm" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+            </label>
+            <label class="block">
+              <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Working hours end (1-24)</span>
+              <input type="number" name="workingHoursEnd" min="1" max="24"
+                class="w-full rounded-lg px-3 py-1.5 text-sm" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+            </label>
+            <label class="block">
+              <span class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-soft));">Timezone (IANA)</span>
+              <input type="text" name="timezone" placeholder="Asia/Kolkata"
+                class="w-full rounded-lg px-3 py-1.5 text-sm" style="background:rgb(var(--bg)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));" />
+            </label>
+            <div class="col-span-full flex items-center justify-end gap-3">
+              <p data-role="error" class="text-xs mr-auto" style="color:rgb(var(--rose));"></p>
+              <p data-role="saved" class="text-xs mr-2" style="color:rgb(var(--emerald));"></p>
+              <button type="submit" class="btn-coral text-sm">Save throttle</button>
+            </div>
+          </form>
+        </section>
+
+        <div class="rounded-xl border border-white/5 p-4 text-xs" style="background:rgba(0,0,0,0.2);">
+          <p class="font-medium mb-2" style="color:rgb(var(--ink-soft));">The hard rules (no UI override)</p>
+          <ul class="space-y-1 leading-5" style="color:rgb(var(--ink-muted));">
+            <li>Max 3 sends ever to the same contact (initial + 2 follow-ups)</li>
+            <li>Suppressions from STOP replies are permanent</li>
+            <li>All times respect the configured timezone</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ============ TEMPLATES TAB ============ -->
+      <div id="tab-templates" class="tab-panel hidden mx-auto max-w-2xl px-6 py-8 space-y-6">
+        <header>
+          <h1 class="text-xl font-semibold tracking-tight">Templates</h1>
+          <p class="mt-1 text-sm" style="color:rgb(var(--ink-muted));">Edits bump the template version. Existing drafts are unaffected. Future generations pick up the new version.</p>
+        </header>
+        <section class="card">
+          <div id="templates-body" class="space-y-4 p-5 text-sm" style="color:rgb(var(--ink-muted));">
+            <div class="flex items-center gap-2"><span class="loading-dots"><span></span><span></span><span></span></span><span class="text-xs">loading templates</span></div>
+          </div>
+        </section>
+      </div>
+
+    </main>
+
+    <script src="/app.js"></script>
+
+    <script>
+      (function () {
+        'use strict';
+
+        // ---- Tab switcher ----
+        const bar = document.getElementById('settings-tab-bar');
+        const panels = {};
+        document.querySelectorAll('.tab-panel').forEach(function(p) {
+          panels[p.id.replace('tab-', '')] = p;
+        });
+
+        function switchTab(name) {
+          bar.querySelectorAll('.settings-tab').forEach(function(btn) {
+            const active = btn.dataset.tab === name;
+            btn.classList.toggle('active', active);
+            btn.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          Object.keys(panels).forEach(function(k) {
+            panels[k].classList.toggle('hidden', k !== name);
+          });
+          // Persist choice
+          try { localStorage.setItem('settings-tab', name); } catch(e) {}
+        }
+
+        bar.addEventListener('click', function(e) {
+          const btn = e.target.closest('[data-tab]');
+          if (btn) switchTab(btn.dataset.tab);
+        });
+
+        // Restore last tab or open via hash
+        (function() {
+          const hash = location.hash.replace('#', '');
+          const saved = hash || (function() { try { return localStorage.getItem('settings-tab'); } catch(e) {} return null; })();
+          if (saved && panels[saved]) switchTab(saved);
+        })();
+
+        // ---- Credential test buttons ----
+        function esc(s) {
+          return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+        async function apiFetch(url, opts) {
+          const o = { headers: {}, ...opts };
+          if (o.body && typeof o.body !== 'string') {
+            o.headers['Content-Type'] = 'application/json';
+            o.body = JSON.stringify(o.body);
+          }
+          const r = await fetch(url, o);
+          const text = await r.text();
+          const data = text ? JSON.parse(text) : null;
+          if (!r.ok) throw new Error((data && data.error && data.error.message) || data?.error || r.statusText);
+          return data;
+        }
+
+        async function testConnection(name, btn) {
+          const resultEl = document.querySelector('[data-result="' + name + '"]');
+          if (resultEl) { resultEl.textContent = 'testing...'; resultEl.style.color = 'rgb(var(--ink-muted))'; }
+          btn.disabled = true;
+          try {
+            const res = await apiFetch('/api/settings/test/' + name, { method: 'POST' });
+            if (resultEl) { resultEl.textContent = res.message || 'ok'; resultEl.style.color = 'rgb(var(--emerald))'; }
+          } catch (err) {
+            if (resultEl) { resultEl.textContent = err.message; resultEl.style.color = 'rgb(var(--rose))'; }
+          } finally {
+            btn.disabled = false;
+          }
+        }
+
+        document.querySelectorAll('button[data-test]').forEach(function(btn) {
+          btn.addEventListener('click', function() { testConnection(btn.dataset.test, btn); });
+        });
+
+        document.getElementById('status-refresh')?.addEventListener('click', function() {
+          loadCurrentStatus();
+        });
+
+        async function loadCurrentStatus() {
+          try {
+            const d = await apiFetch('/api/settings');
+            const c = d.connections;
+            const llm = c.llm || { provider: 'anthropic', status: c.anthropic.status, model: c.anthropic.model };
+            const cur = document.getElementById('llm-current');
+            if (cur) cur.textContent = llm.provider === 'ollama'
+              ? 'ollama (' + (llm.model || '') + ')'
+              : 'anthropic (' + (llm.model || '') + ')';
+            renderDefaultCv(d.default_cv);
+          } catch (err) { /* non-fatal */ }
+        }
+
+        // ---- Default CV (set once, reuse everywhere) ----
+        const dcvCurrent = document.getElementById('default-cv-current');
+        function renderDefaultCv(dc) {
+          if (!dcvCurrent) return;
+          if (dc && dc.configured) {
+            dcvCurrent.innerHTML =
+              'Current: <span class="rounded-md bg-slate-800 px-2 py-0.5 font-mono text-xs">' + esc(dc.filename) + '</span>'
+              + (dc.uploaded_at ? ' <span style="color:rgb(var(--ink-faint));">· uploaded ' + esc(dc.uploaded_at) + '</span>' : '')
+              + (dc.text_extracted ? '' : ' <span style="color:rgb(var(--amber));">· text not extracted (file still attaches)</span>');
+            dcvCurrent.style.color = 'rgb(var(--ink-soft))';
+          } else {
+            dcvCurrent.textContent = 'No default CV yet. Once uploaded, it attaches to every campaign automatically.';
+            dcvCurrent.style.color = 'rgb(var(--ink-faint))';
+          }
+        }
+
+        const dcvForm = document.getElementById('default-cv-form');
+        dcvForm?.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          const msg = dcvForm.querySelector('[data-role="default-cv-msg"]');
+          if (msg) { msg.textContent = ''; }
+          const fileInput = dcvForm.querySelector('input[name="file"]');
+          if (!fileInput || !fileInput.files || !fileInput.files.length) {
+            if (msg) { msg.textContent = 'Choose a PDF first.'; msg.style.color = 'rgb(var(--rose))'; }
+            return;
+          }
+          const fd = new FormData(dcvForm);
+          const btn = dcvForm.querySelector('button[type="submit"]');
+          if (btn) btn.disabled = true;
+          try {
+            const r = await fetch('/api/uploads/default-cv', { method: 'POST', body: fd });
+            const text = await r.text();
+            const data = text ? JSON.parse(text) : null;
+            if (!r.ok) throw new Error((data && data.error && data.error.message) || r.statusText);
+            if (msg) {
+              msg.textContent = 'Saved' + (data && data.cv_text_extracted ? '' : ' — note: no text could be extracted from this PDF');
+              msg.style.color = 'rgb(var(--emerald))';
+            }
+            dcvForm.reset();
+            await loadCurrentStatus();
+          } catch (err) {
+            if (msg) { msg.textContent = err.message; msg.style.color = 'rgb(var(--rose))'; }
+          } finally {
+            if (btn) btn.disabled = false;
+          }
+        });
+
+        loadCurrentStatus();
+      })();
+    </script>
+  </body>
+</html>

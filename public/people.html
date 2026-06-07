@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>People · Outreach Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' };</script>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="min-h-screen antialiased">
+    <header class="border-b border-white/5 bg-[rgb(11,13,22)]/60 backdrop-blur-xl">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <a href="/" class="flex items-center gap-2.5 text-sm font-semibold tracking-tight">
+          <span class="relative inline-flex h-6 w-6 items-center justify-center rounded-lg" style="background:linear-gradient(135deg,rgb(255,138,101),rgb(244,96,54));">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 text-white" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          </span>
+          <span>Outreach Studio</span>
+        </a>
+        <nav class="flex items-center gap-1">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/companies.html" class="nav-link active">Companies</a>
+          <a href="/log.html" class="nav-link">Log</a>
+          <a href="/settings.html" class="nav-link">Settings</a>
+          <a href="/setup.html" class="nav-link">Setup</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-5xl px-6 py-8">
+      <p class="crumb">
+        <a href="/companies.html">Companies</a>
+        <span class="crumb-sep">/</span>
+        <a id="crumb-company" href="#">Loading…</a>
+        <span class="crumb-sep">/</span>
+        <span>People</span>
+      </p>
+
+      <header class="mt-3 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 id="people-title" class="display-2"><span class="text-coral">People</span> at this campaign</h1>
+          <p id="people-sub" class="mt-1 text-sm text-[rgb(var(--ink-muted))]">Each row is one human you're reaching out to. Click a row to see their draft.</p>
+        </div>
+        <div class="flex gap-2">
+          <a id="review-link" href="#" class="rounded-md btn-coral px-4 py-2 text-sm font-medium text-white shadow-lg shadow-[rgb(var(--coral-deep))]/40">Review →</a>
+        </div>
+      </header>
+
+      <section class="mt-6 overflow-hidden card">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead class="bg-white/[0.02] text-left text-xs uppercase tracking-wider text-[rgb(var(--ink-muted))]">
+              <tr>
+                <th class="px-4 py-3 font-medium">Name</th>
+                <th class="px-4 py-3 font-medium">Title</th>
+                <th class="px-4 py-3 font-medium">Email</th>
+                <th class="px-4 py-3 font-medium">Status</th>
+                <th class="px-4 py-3 font-medium">Subject (current draft)</th>
+                <th class="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody id="people-tbody">
+              <tr><td colspan="6" class="px-4 py-10 text-center text-[rgb(var(--ink-faint))]">Loading the humans…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        'use strict';
+        const slug = location.pathname.match(/^\/companies\/([^/]+)\/people/)[1];
+        function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+        async function api(path) {
+          const r = await fetch(path);
+          const t = await r.text();
+          const d = t ? JSON.parse(t) : null;
+          if (!r.ok) throw new Error((d?.error?.message) || r.statusText);
+          return d;
+        }
+
+        const statusPill = (p) => {
+          if (p.sent_at) {
+            return p.replied
+              ? '<span class="pill text-[rgb(var(--sky))]">replied</span>'
+              : '<span class="pill text-[rgb(var(--emerald))]">sent</span>';
+          }
+          if (!p.draft_id) return '<span class="pill text-[rgb(var(--ink-muted))]">no draft</span>';
+          const s = p.draft_status || 'draft';
+          const colors = { draft:'text-[rgb(var(--ink-soft))]', approved:'text-[rgb(var(--emerald))]', queued:'text-[rgb(var(--coral-soft))]', skipped:'text-[rgb(var(--ink-faint))]', failed:'text-[rgb(var(--rose))]' };
+          return `<span class="pill ${colors[s]||'text-[rgb(var(--ink-soft))]'}">${esc(s)}</span>`;
+        };
+
+        async function load() {
+          try {
+            const c = await api(`/api/companies/by-slug/${slug}`);
+            document.querySelector('#crumb-company').textContent = c.name;
+            document.querySelector('#crumb-company').href = `/companies/${c.slug}`;
+            document.querySelector('#people-title').textContent = `People at ${c.name}`;
+            document.querySelector('#people-sub').textContent = c.industry ? `${c.industry} · click a row to see their draft` : 'click a row to see their draft';
+            document.querySelector('#review-link').href = `/companies/${c.slug}/review`;
+            document.title = `${c.name} · People`;
+
+            const d = await api(`/api/companies/${c.id}/people-with-drafts`);
+            const tbody = document.querySelector('#people-tbody');
+            if (!d.people.length) {
+              tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-10 text-center text-[rgb(var(--ink-faint))]">
+                <div class="flex flex-col items-center gap-3">
+                  <span>No contacts at ${esc(c.name)} yet.</span>
+                  <a href="/companies/${esc(c.slug)}" class="rounded-md btn-coral px-4 py-1.5 text-sm font-medium text-white">Upload contacts CSV →</a>
+                </div>
+              </td></tr>`;
+              return;
+            }
+            tbody.innerHTML = d.people.map(p => `
+              <tr class="border-t border-white/5 hover:bg-white/[0.025] cursor-pointer" onclick="location.href='/companies/${esc(slug)}/people/${p.contact_id}'">
+                <td class="px-4 py-3 text-[rgb(var(--ink))]">${esc(p.full_name||'(unnamed)')}</td>
+                <td class="px-4 py-3 text-[rgb(var(--ink-muted))]">${esc(p.title||'—')}</td>
+                <td class="px-4 py-3 text-[rgb(var(--ink-soft))]">${esc(p.email||'')}</td>
+                <td class="px-4 py-3">${statusPill(p)}</td>
+                <td class="px-4 py-3 text-[rgb(var(--ink-muted))] max-w-md truncate">${esc(p.draft_subject||'(none)')}</td>
+                <td class="px-4 py-3 text-right text-xs text-[rgb(var(--coral-soft))]">open →</td>
+              </tr>`).join('');
+          } catch (err) {
+            document.querySelector('#people-tbody').innerHTML = `<tr><td colspan="6" class="px-4 py-10 text-center text-rose-400">${esc(err.message)}</td></tr>`;
+          }
+        }
+        load();
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Company · Outreach Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { darkMode: 'class' };
+    </script>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="page-frame antialiased">
+    <header class="flex-none border-b border-white/5 bg-[rgb(11,13,22)]/70 backdrop-blur-xl z-10">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+        <a href="/" class="flex items-center gap-2.5 text-sm font-semibold tracking-tight">
+          <span class="relative inline-flex h-6 w-6 items-center justify-center rounded-lg" style="background:linear-gradient(135deg,rgb(255,138,101),rgb(244,96,54));">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 text-white" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          </span>
+          <span>Outreach Studio</span>
+        </a>
+        <nav class="flex items-center gap-1">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/companies.html" class="nav-link active">Companies</a>
+          <a href="/log.html" class="nav-link">Log</a>
+          <a href="/settings.html" class="nav-link">Settings</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-1 scroll-y">
+    <div class="mx-auto max-w-6xl px-6 py-6">
+      <p class="crumb">
+        <a href="/companies.html">Companies</a>
+        <span class="crumb-sep">/</span>
+        <span id="crumb-company-name">…</span>
+      </p>
+
+      <div id="company-loading" class="mt-6 text-[rgb(var(--ink-muted))]">Loading…</div>
+      <div id="company-error" class="mt-6 hidden rounded-md border border-rose-800 bg-rose-950/40 px-4 py-3 text-rose-200"></div>
+
+      <section id="company-detail" class="hidden">
+        <!-- Company header card -->
+        <div class="mt-5 rounded-2xl border border-[rgb(var(--border))] overflow-hidden slide-in"
+          style="background:rgb(var(--bg-elevated));">
+          <!-- Coral accent bar -->
+          <div class="h-0.5 w-full" style="background:linear-gradient(90deg,rgb(var(--coral)),rgb(var(--coral-deep)),transparent 60%);"></div>
+          <div class="px-6 py-5 flex items-start justify-between gap-6">
+            <div class="min-w-0">
+              <div class="flex items-center gap-3 flex-wrap">
+                <h1 id="company-name" class="text-xl font-semibold tracking-tight"></h1>
+                <span id="company-status"></span>
+              </div>
+              <p class="mt-0.5 text-xs" style="color:rgb(var(--ink-faint));"><span id="company-slug"></span></p>
+              <p id="company-context" class="mt-3 max-w-3xl text-sm leading-relaxed whitespace-pre-line"
+                style="color:rgb(var(--ink-muted));"></p>
+            </div>
+          </div>
+        </div>
+
+        <nav class="mt-5 flex flex-wrap gap-0.5 border-b border-white/[0.06] text-sm">
+          <button data-tab="people" class="tab-btn -mb-px border-b-2 px-4 py-2.5 font-medium">People</button>
+          <button data-tab="drafts" class="tab-btn -mb-px border-b-2 px-4 py-2.5 font-medium">Drafts</button>
+        </nav>
+
+        <!-- PEOPLE TAB — upload interface (file or paste) → preview → people table -->
+        <section data-panel="people" class="tab-panel mt-6">
+
+          <!-- Upload flow container: auto-shown for new campaigns, togglable via "Add more" -->
+          <div id="upload-flow" class="hidden space-y-3">
+
+            <!-- Card: mode header + form -->
+            <div id="upload-step-1" class="card p-5 upload-flow-in">
+
+              <!-- Header with coral left-border accent -->
+              <div class="flex items-start justify-between gap-4 mb-5">
+                <div class="flex items-start gap-3">
+                  <div class="mt-0.5 w-0.5 h-8 rounded-full flex-shrink-0" style="background:linear-gradient(180deg,rgb(var(--coral)),transparent);"></div>
+                  <div>
+                    <p class="text-sm font-semibold" style="color:rgb(var(--ink));">Add contacts</p>
+                    <p class="mt-0.5 text-xs" style="color:rgb(var(--ink-faint));">
+                      Upload CSV / XLSX <em>or</em> paste from Excel / Sheets — first row must be headers
+                    </p>
+                  </div>
+                </div>
+                <button id="upload-flow-close" type="button"
+                  class="shrink-0 rounded-md p-1.5 transition-all hover:bg-white/[0.06]"
+                  style="color:rgb(var(--ink-faint));" aria-label="Close upload">
+                  <svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5"><path d="M4.28 3.22a.75.75 0 0 0-1.06 1.06L6.94 8l-3.72 3.72a.75.75 0 1 0 1.06 1.06L8 9.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L9.06 8l3.72-3.72a.75.75 0 0 0-1.06-1.06L8 6.94 4.28 3.22Z"/></svg>
+                </button>
+              </div>
+
+              <!-- Mode switcher pills -->
+              <div class="upload-mode-switcher mb-5">
+                <button id="mode-file" data-mode="file" type="button" class="upload-pill active">
+                  <svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5 shrink-0" aria-hidden="true">
+                    <path d="M2 3.5A1.5 1.5 0 013.5 2h6.879a1.5 1.5 0 011.06.44l1.122 1.12a1.5 1.5 0 01.439 1.061V13.5A1.5 1.5 0 0111.5 15h-8A1.5 1.5 0 012 13.5v-10z"/>
+                  </svg>
+                  Upload file
+                </button>
+                <button id="mode-paste" data-mode="paste" type="button" class="upload-pill">
+                  <svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5 shrink-0" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M4.5 2A2.5 2.5 0 002 4.5v7A2.5 2.5 0 004.5 14h7a2.5 2.5 0 002.5-2.5v-7A2.5 2.5 0 0011.5 2h-7zm.75 2.25a.75.75 0 000 1.5h5.5a.75.75 0 000-1.5h-5.5zM4.5 8a.75.75 0 01.75-.75h5.5a.75.75 0 010 1.5h-5.5A.75.75 0 014.5 8zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd"/>
+                  </svg>
+                  Paste data
+                </button>
+              </div>
+
+              <!-- Master form — mode determines which input is active and which endpoint is used -->
+              <form id="upload-master-form" class="space-y-4">
+
+                <!-- FILE MODE pane -->
+                <div id="upload-file-pane">
+                  <label id="drop-zone" class="drop-zone block cursor-pointer" for="upload-file-input">
+                    <input type="file" id="upload-file-input" name="file"
+                      accept=".csv,.xlsx,.xls,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                      class="sr-only" />
+                    <div class="drop-zone__body">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-9 w-9 mb-2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                      </svg>
+                      <p class="text-sm font-medium text-[rgb(var(--ink-soft))]">Drop your file here</p>
+                      <p id="drop-zone-label" class="mt-0.5 text-xs text-[rgb(var(--ink-faint))]">or click to browse &middot; CSV, XLSX, XLS</p>
+                    </div>
+                  </label>
+                </div>
+
+                <!-- PASTE MODE pane -->
+                <div id="upload-paste-pane" class="hidden">
+                  <textarea id="upload-paste-textarea" name="csv_text" rows="9"
+                    class="block w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2.5 font-mono text-xs leading-5 text-[rgb(var(--ink))] resize-none"
+                    placeholder="Paste here — CSV or copy rows from Excel / Sheets.
+First row must be column headers.
+
+Example:
+Name, Email, Title
+John Smith, john@company.com, VP of Product
+Jane Doe, jane@company.com, Head of Engineering"></textarea>
+                </div>
+
+                <p id="upload-master-error" class="text-xs text-rose-400"></p>
+                <div class="flex justify-end">
+                  <button type="submit" id="upload-parse-btn"
+                    class="btn-coral inline-flex items-center gap-2 rounded-xl px-5 py-2 text-sm font-semibold">
+                    Parse
+                    <svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 011.06 0l3.25 3.25a.75.75 0 010 1.06l-3.25 3.25a.75.75 0 01-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 010-1.06z" clip-rule="evenodd"/>
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Step 2: review parsed contacts -->
+            <div id="contacts-preview" class="hidden card p-5 slide-in">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p class="text-sm font-semibold text-[rgb(var(--ink))]">Review contacts</p>
+                  <p id="contacts-summary" class="mt-0.5 text-xs text-[rgb(var(--ink-muted))]"></p>
+                </div>
+                <div class="flex gap-2">
+                  <button id="contacts-discard" type="button"
+                    class="rounded-lg px-3 py-1.5 text-sm text-[rgb(var(--ink-muted))] hover:bg-white/5">← Re-upload</button>
+                  <button id="contacts-commit" type="button"
+                    class="inline-flex items-center gap-2 rounded-xl btn-coral px-5 py-2 text-sm font-semibold text-white">
+                    Initiate outreach
+                    <svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 011.06 0l3.25 3.25a.75.75 0 010 1.06l-3.25 3.25a.75.75 0 01-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 010-1.06z" clip-rule="evenodd"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="mt-4 overflow-hidden rounded-xl border border-white/5">
+                <table class="min-w-full text-sm">
+                  <thead class="bg-white/[0.02] text-left text-xs uppercase tracking-wider text-[rgb(var(--ink-muted))]">
+                    <tr>
+                      <th class="px-3 py-2"><input type="checkbox" id="contacts-select-all" checked /></th>
+                      <th class="px-3 py-2 font-medium">Row</th>
+                      <th class="px-3 py-2 font-medium">Name</th>
+                      <th class="px-3 py-2 font-medium">Title</th>
+                      <th class="px-3 py-2 font-medium">Seniority</th>
+                      <th class="px-3 py-2 font-medium">Email</th>
+                      <th class="px-3 py-2 font-medium">Warnings</th>
+                    </tr>
+                  </thead>
+                  <tbody id="contacts-preview-tbody"></tbody>
+                </table>
+              </div>
+              <p id="contacts-preview-error" class="mt-2 text-xs text-rose-400"></p>
+            </div>
+
+          </div>
+
+          <!-- People table (when contacts already exist) -->
+          <div id="people-list-wrap" class="hidden">
+            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <input id="people-search" type="search" placeholder="Filter by name, title, email…"
+                class="w-64 rounded-lg border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-1.5 text-sm text-[rgb(var(--ink))] placeholder:text-[rgb(var(--ink-faint))]" />
+              <div class="flex items-center gap-2">
+                <button id="people-initiate-outreach" type="button"
+                  class="hidden btn-coral items-center gap-2 rounded-xl px-4 py-1.5 text-sm font-semibold text-white"
+                  title="Generate AI drafts for contacts that don't have one yet, then review">
+                  Initiate outreach
+                  <svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 011.06 0l3.25 3.25a.75.75 0 010 1.06l-3.25 3.25a.75.75 0 01-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 010-1.06z" clip-rule="evenodd"/></svg>
+                </button>
+                <button id="people-upload-toggle" type="button"
+                  class="rounded-lg border border-[rgb(var(--border-strong))] px-3 py-1.5 text-xs font-medium text-[rgb(var(--ink-soft))] hover:bg-white/[0.04] transition-colors">
+                  + Add more contacts
+                </button>
+              </div>
+            </div>
+            <div class="card overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                  <thead class="bg-white/[0.02] text-left text-xs uppercase tracking-wider text-[rgb(var(--ink-muted))]">
+                    <tr>
+                      <th class="px-4 py-3 font-medium">Name</th>
+                      <th class="px-4 py-3 font-medium">Title</th>
+                      <th class="px-4 py-3 font-medium">Email</th>
+                      <th class="px-4 py-3 font-medium">Status</th>
+                      <th class="px-4 py-3 font-medium">Draft Subject</th>
+                      <th class="px-4 py-3"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="people-tbody">
+                    <tr><td colspan="6" class="px-4 py-6 text-center text-[rgb(var(--ink-faint))]">Loading…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Campaign attachments — the single place to attach CV / cover letter / work
+               samples. Everything here is attached to every email in this campaign and its
+               text feeds the AI. Your default CV (from Settings) is used automatically unless
+               you upload a per-campaign one here. -->
+          <div id="attachments-card" class="card p-5 mt-6">
+            <div class="flex items-start gap-3 mb-5">
+              <div class="mt-0.5 w-0.5 h-8 rounded-full flex-shrink-0" style="background:linear-gradient(180deg,rgb(var(--coral)),transparent);"></div>
+              <div>
+                <p class="text-sm font-semibold" style="color:rgb(var(--ink));">Attachments</p>
+                <p class="mt-0.5 text-xs" style="color:rgb(var(--ink-faint));">Attached to every email in this campaign — the text also helps the AI write more personal emails. Your <a href="/settings.html" class="underline hover:text-[rgb(var(--coral-soft))]">default CV</a> attaches automatically; upload one here only to override it for this campaign.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <!-- CV -->
+              <div>
+                <label class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-muted));">CV / Resume <span class="ml-1 font-normal" style="color:rgb(var(--ink-faint));">· PDF</span></label>
+                <div data-cv-current class="mb-1.5 text-xs" style="color:rgb(var(--ink-faint));">Not uploaded yet.</div>
+                <form data-upload="cv" class="flex flex-col gap-2">
+                  <input type="file" name="file" accept=".pdf,application/pdf" required class="block w-full cursor-pointer rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-3 py-2 text-sm text-[rgb(var(--ink-soft))] file:mr-3 file:rounded-md file:border-0 file:bg-[rgb(var(--coral))] file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white hover:file:bg-[rgb(var(--coral-deep))]" />
+                  <button type="submit" class="self-end rounded-md btn-coral px-3 py-1.5 text-sm font-medium text-white">Upload CV</button>
+                  <p data-role="error" class="text-xs text-rose-400"></p>
+                </form>
+              </div>
+              <!-- Cover letter -->
+              <div>
+                <label class="block text-xs font-medium mb-1" style="color:rgb(var(--ink-muted));">Cover letter <span class="ml-1 font-normal" style="color:rgb(var(--ink-faint));">· PDF or paste</span></label>
+                <div data-cover-current class="mb-1.5 text-xs" style="color:rgb(var(--ink-faint));">Not set yet.</div>
+                <form data-cover-form class="flex flex-col gap-2">
+                  <input type="file" name="file" accept=".pdf,application/pdf" class="block w-full cursor-pointer rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-3 py-2 text-sm text-[rgb(var(--ink-soft))] file:mr-3 file:rounded-md file:border-0 file:bg-[rgb(var(--coral))] file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white hover:file:bg-[rgb(var(--coral-deep))]" />
+                  <textarea name="text" rows="3" placeholder="…or paste the cover-letter text" class="block w-full rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-3 py-2 font-mono text-xs leading-5 text-[rgb(var(--ink))]"></textarea>
+                  <button type="submit" class="self-end rounded-md btn-coral px-3 py-1.5 text-sm font-medium text-white">Save cover letter</button>
+                  <p data-role="cover-msg" class="text-xs"></p>
+                </form>
+              </div>
+            </div>
+
+            <!-- Work samples / named artifacts -->
+            <div class="mt-5 border-t border-white/[0.05] pt-4">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-medium" style="color:rgb(var(--ink-muted));">Work samples / artifacts</p>
+                <span class="text-xs" style="color:rgb(var(--ink-faint));">each attached to every email</span>
+              </div>
+              <ul data-artifacts-list class="mt-2 divide-y divide-white/[0.05] text-sm">
+                <li class="py-2" style="color:rgb(var(--ink-faint));">None yet.</li>
+              </ul>
+              <form data-artifact-form class="mt-3 grid grid-cols-[1fr_auto_auto] items-center gap-2">
+                <input name="name" type="text" required placeholder='Name it (e.g. "PRD sample", "Growth memo")' class="rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-3 py-1.5 text-sm text-[rgb(var(--ink))]" />
+                <input name="file" type="file" required class="text-xs file:mr-2 file:rounded file:border-0 file:bg-[rgb(var(--coral))] file:px-3 file:py-1 file:text-xs file:font-medium file:text-white hover:file:bg-[rgb(var(--coral-deep))]" />
+                <button type="submit" class="rounded-md btn-coral px-3 py-1.5 text-sm font-medium text-white">Add</button>
+                <p data-role="artifact-msg" class="col-span-3 mt-1 text-xs"></p>
+              </form>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- DRAFTS TAB -->
+        <section data-panel="drafts" class="tab-panel mt-6 hidden">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="text-sm font-semibold uppercase tracking-wider text-[rgb(var(--ink-muted))]">Drafts</h3>
+              <p id="drafts-summary" class="mt-1 text-xs text-[rgb(var(--ink-faint))]"></p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="document.dispatchEvent(new KeyboardEvent('keydown', { key: '?' }))"
+                class="rounded-md px-2 py-1 text-xs text-[rgb(var(--ink-faint))] hover:bg-white/[0.04] hover:text-[rgb(var(--ink-soft))]"
+                title="Keyboard shortcuts">?</button>
+              <button id="drafts-generate-missing" type="button"
+                class="rounded-md border border-[rgb(var(--border-strong))] px-3 py-1.5 text-sm font-medium text-[rgb(var(--ink-soft))] hover:bg-white/[0.04]"
+                title="Generate AI drafts for contacts that don't have one yet">
+                Generate missing
+              </button>
+              <button id="drafts-generate-all" type="button"
+                class="rounded-md border border-[rgb(var(--border-strong))] px-3 py-1.5 text-sm font-medium text-[rgb(var(--ink-soft))] hover:bg-white/[0.04]"
+                title="Re-generate all drafts from scratch using AI">
+                Regenerate all
+              </button>
+              <a id="drafts-review-wizard" href="#"
+                class="rounded-xl btn-coral px-4 py-2 text-sm font-semibold text-white">
+                Review →
+              </a>
+              <button id="drafts-send-campaign" type="button"
+                class="rounded-xl border border-[rgb(var(--coral))]/40 px-4 py-2 text-sm font-medium text-[rgb(var(--coral-soft))] hover:bg-[rgb(var(--coral))]/10 disabled:cursor-not-allowed disabled:opacity-40"
+                title="Queue all approved drafts to send with throttling">
+                Send
+              </button>
+            </div>
+          </div>
+
+          <div id="drafts-progress" class="mt-3 hidden rounded-md border border-[rgb(var(--coral))]/30 bg-[rgb(var(--coral))]/5 px-3 py-2 text-sm text-[rgb(var(--coral-soft))]"></div>
+          <div id="drafts-error" class="mt-3 hidden rounded-md border border-rose-800 bg-rose-950/30 px-3 py-2 text-sm text-rose-200"></div>
+
+          <div class="mt-4 grid gap-4 lg:grid-cols-[340px_minmax(0,1fr)]">
+            <aside class="card">
+              <ul id="drafts-list" class="max-h-[70vh] divide-y divide-slate-800 overflow-y-auto">
+                <li class="px-4 py-6 text-sm text-[rgb(var(--ink-faint))]">No drafts yet.</li>
+              </ul>
+            </aside>
+
+            <article id="draft-editor" class="card p-5">
+              <p class="text-sm text-[rgb(var(--ink-faint))]">Select a draft from the list to review and edit.</p>
+            </article>
+          </div>
+
+          <template id="draft-editor-template">
+            <div data-editor-root>
+              <header class="flex items-start justify-between gap-4">
+                <div class="min-w-0">
+                  <h4 class="truncate text-lg font-semibold text-[rgb(var(--ink))]" data-bind="contact_name"></h4>
+                  <p class="text-xs text-[rgb(var(--ink-faint))]"><span data-bind="contact_title"></span> · <span data-bind="contact_seniority"></span> · <span data-bind="contact_email"></span></p>
+                </div>
+                <span data-bind="status_badge"></span>
+              </header>
+
+              <div data-bind="warnings" class="mt-3 flex flex-wrap gap-1"></div>
+
+              <div class="mt-5">
+                <label class="block text-xs font-medium uppercase tracking-wider text-[rgb(var(--ink-muted))]">Subject</label>
+                <input type="text" data-bind="subject_input"
+                  class="mt-1 block w-full rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-3 py-2 text-[rgb(var(--ink))] focus:border-[rgb(var(--coral))] focus:outline-none focus:ring-1 focus:ring-[rgb(var(--coral))]" />
+              </div>
+
+              <div class="mt-4">
+                <label class="block text-xs font-medium uppercase tracking-wider text-[rgb(var(--ink-muted))]">Body</label>
+                <textarea data-bind="body_input" rows="14"
+                  class="mt-1 block w-full rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-3 py-2 font-mono text-sm leading-6 text-[rgb(var(--ink))] focus:border-[rgb(var(--coral))] focus:outline-none focus:ring-1 focus:ring-[rgb(var(--coral))]"></textarea>
+              </div>
+
+              <div class="mt-4 rounded-md border border-white/5 bg-[rgb(var(--bg))]/50 px-3 py-2 text-xs text-[rgb(var(--ink-muted))]">
+                <div class="font-semibold uppercase tracking-wider text-[rgb(var(--ink-faint))]">Attachments</div>
+                <ul data-bind="attachments" class="mt-1 list-disc pl-5"></ul>
+              </div>
+
+              <div class="mt-3 text-xs text-[rgb(var(--ink-faint))]">
+                <span data-bind="tokens"></span>
+              </div>
+
+              <div class="mt-5 flex flex-wrap items-center justify-end gap-2">
+                <button type="button" data-action="skip"
+                  class="rounded-md px-3 py-1.5 text-sm font-medium text-[rgb(var(--ink-soft))] hover:bg-white/[0.04]">Skip</button>
+                <button type="button" data-action="regenerate"
+                  class="rounded-md border border-slate-700 px-3 py-1.5 text-sm font-medium text-[rgb(var(--ink-soft))] hover:bg-white/[0.04]">Regenerate</button>
+                <button type="button" data-action="save"
+                  class="rounded-md border border-[rgb(var(--coral))]/40 px-3 py-1.5 text-sm font-medium text-[rgb(var(--coral-soft))] hover:bg-[rgb(var(--coral))]/10">Save edits</button>
+                <button type="button" data-action="approve"
+                  class="rounded-md btn-coral px-4 py-1.5 text-sm font-medium text-white">Approve</button>
+                <button type="button" data-action="send"
+                  class="rounded-md bg-rose-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-rose-500 disabled:cursor-not-allowed disabled:opacity-40">Send now</button>
+              </div>
+              <p data-bind="action_error" class="mt-2 text-right text-xs text-rose-400"></p>
+            </div>
+          </template>
+        </section>
+      </section>
+    </div>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

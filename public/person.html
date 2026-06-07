@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Person · Outreach Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' };</script>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="page-frame antialiased">
+
+    <header class="flex-none border-b border-white/5 bg-[rgb(11,13,22)]/70 backdrop-blur-xl z-10 relative">
+      <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
+        <a href="/" class="flex items-center gap-2.5 text-sm font-semibold tracking-tight">
+          <span class="relative inline-flex h-6 w-6 items-center justify-center rounded-lg" style="background:linear-gradient(135deg,rgb(255,138,101),rgb(244,96,54));">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 text-white" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          </span>
+          <span>Outreach Studio</span>
+        </a>
+        <nav class="flex items-center gap-1">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/companies.html" class="nav-link active">Companies</a>
+          <a href="/log.html" class="nav-link">Log</a>
+          <a href="/settings.html" class="nav-link">Settings</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-1 scroll-y">
+      <div class="mx-auto max-w-5xl px-6 py-6">
+
+        <!-- Breadcrumb -->
+        <p class="crumb">
+          <a href="/companies.html">Companies</a>
+          <span class="crumb-sep">/</span>
+          <a id="crumb-company" href="#">…</a>
+          <span class="crumb-sep">/</span>
+          <a id="crumb-people" href="#">People</a>
+          <span class="crumb-sep">/</span>
+          <span id="crumb-person" class="truncate max-w-[180px] inline-block align-bottom">…</span>
+        </p>
+
+        <!-- Loading / error states -->
+        <div id="loading" class="mt-8 flex items-center gap-2" style="color:rgb(var(--ink-muted));">
+          <span class="loading-dots"><span></span><span></span><span></span></span>
+          <span class="text-sm">Loading…</span>
+        </div>
+        <div id="error" class="mt-6 hidden rounded-lg border border-rose-800/60 bg-rose-950/30 px-4 py-3 text-sm text-rose-200"></div>
+
+        <!-- Main content -->
+        <div id="person-root" class="mt-4 hidden">
+
+          <!-- Two-column layout: person card (left) + draft editor (right) -->
+          <div class="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_2fr]">
+
+            <!-- LEFT: Person identity card -->
+            <aside>
+              <div class="card p-5 slide-in">
+                <!-- Name + status -->
+                <div class="flex items-start justify-between gap-2 flex-wrap">
+                  <div>
+                    <h1 id="person-name" class="text-lg font-semibold tracking-tight" style="color:rgb(var(--ink));"></h1>
+                    <p id="person-title" class="mt-0.5 text-xs" style="color:rgb(var(--ink-muted));"></p>
+                  </div>
+                  <div id="person-status-badge"></div>
+                </div>
+
+                <!-- Meta fields -->
+                <dl class="mt-4 space-y-2.5 text-xs">
+                  <div>
+                    <dt class="eyebrow mb-0.5">Email</dt>
+                    <dd id="person-email" class="font-mono" style="color:rgb(var(--ink-soft));"></dd>
+                  </div>
+                  <div id="person-seniority-row">
+                    <dt class="eyebrow mb-0.5">Seniority</dt>
+                    <dd id="person-seniority" style="color:rgb(var(--ink-soft));"></dd>
+                  </div>
+                  <div id="person-linkedin-row" class="hidden">
+                    <dt class="eyebrow mb-0.5">LinkedIn</dt>
+                    <dd><a id="person-linkedin" href="#" target="_blank" rel="noreferrer"
+                      class="hover:text-[rgb(var(--coral-soft))] transition-colors truncate block"
+                      style="color:rgb(var(--ink-soft));"></a></dd>
+                  </div>
+                </dl>
+
+                <!-- Sent confirmation -->
+                <div id="sent-info" class="hidden mt-4 rounded-lg border border-emerald-900/40 bg-emerald-950/20 p-3">
+                  <p class="eyebrow mb-1" style="color:rgb(var(--emerald));">Sent</p>
+                  <p id="sent-line" class="text-xs text-emerald-300"></p>
+                </div>
+
+                <!-- Navigation -->
+                <div class="mt-5 flex flex-col gap-2">
+                  <a id="back-people" href="#"
+                    class="btn-ghost text-xs inline-flex items-center gap-1.5 justify-center">
+                    <svg viewBox="0 0 16 16" fill="currentColor" class="h-3 w-3 opacity-60"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" clip-rule="evenodd"/></svg>
+                    All people
+                  </a>
+                  <a id="open-wizard" href="#"
+                    class="btn-ghost text-xs inline-flex items-center gap-1.5 justify-center" style="color:rgb(var(--coral-soft));">
+                    Open in review wizard
+                    <svg viewBox="0 0 16 16" fill="currentColor" class="h-3 w-3 opacity-70"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" clip-rule="evenodd"/></svg>
+                  </a>
+                </div>
+              </div>
+            </aside>
+
+            <!-- RIGHT: Draft editor -->
+            <section aria-label="Draft editor">
+
+              <!-- No-draft state -->
+              <div id="no-draft-panel" class="hidden card p-6 text-center bounce-in">
+                <div class="mx-auto mb-4 h-12 w-12 rounded-xl flex items-center justify-center"
+                  style="background:rgba(255,138,101,0.1); border:1px solid rgba(255,138,101,0.2);">
+                  <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" style="color:rgb(var(--coral-soft));">
+                    <path d="M12 4v16m8-8H4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <p class="text-sm font-medium mb-1" style="color:rgb(var(--ink));">No draft yet</p>
+                <p class="text-xs mb-5" style="color:rgb(var(--ink-faint));">Generate a personalised AI draft for this contact.</p>
+                <button id="btn-generate" type="button" class="btn-coral inline-flex items-center gap-2 mx-auto">
+                  <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4"><path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/></svg>
+                  Generate Draft
+                </button>
+                <p id="generate-status" class="mt-3 text-xs" style="color:rgb(var(--ink-muted));"></p>
+              </div>
+
+              <!-- Draft editor panel -->
+              <div id="draft-panel" class="hidden space-y-4 slide-in">
+
+                <!-- Toolbar: status + warnings + tokens -->
+                <div class="flex items-center gap-2 flex-wrap">
+                  <div id="draft-status-badge"></div>
+                  <div id="draft-warnings" class="flex flex-wrap gap-1"></div>
+                  <span id="draft-tokens" class="ml-auto text-[0.6rem] tabular-nums" style="color:rgb(var(--ink-faint));"></span>
+                </div>
+
+                <!-- Subject -->
+                <div>
+                  <label class="block text-xs font-medium mb-1.5" style="color:rgb(var(--ink-soft));" for="draft-subject">Subject</label>
+                  <input id="draft-subject" type="text"
+                    class="w-full rounded-lg px-3 py-2.5 text-sm font-medium"
+                    style="background:rgb(var(--bg-elevated)); border:1px solid rgb(var(--border)); color:rgb(var(--ink));"
+                    placeholder="Email subject…" />
+                </div>
+
+                <!-- Body -->
+                <div>
+                  <label class="block text-xs font-medium mb-1.5" style="color:rgb(var(--ink-soft));" for="draft-body">Body</label>
+                  <textarea id="draft-body" rows="14"
+                    class="w-full rounded-lg px-3 py-2.5 text-sm leading-relaxed resize-y font-mono"
+                    style="background:rgb(var(--bg-elevated)); border:1px solid rgb(var(--border)); color:rgb(var(--ink-soft));"
+                    placeholder="Email body…"></textarea>
+                </div>
+
+                <!-- Action error -->
+                <p id="draft-action-error" class="text-xs min-h-[1rem]" style="color:rgb(var(--rose));"></p>
+
+                <!-- Action buttons -->
+                <div class="flex flex-wrap items-center gap-2 pt-1 border-t border-white/[0.05]">
+                  <button id="btn-save" type="button"
+                    class="btn-ghost text-xs inline-flex items-center gap-1.5">
+                    <svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5 opacity-70"><path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4.5L10.5 1H2zm0 1h8v3.5H13V14H3V2h-.5L2 2zm8.5 0l2 2H10.5V2z"/></svg>
+                    Save
+                  </button>
+                  <button id="btn-approve" type="button"
+                    class="btn-ghost text-xs inline-flex items-center gap-1.5" style="color:rgb(var(--emerald));">
+                    <svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5"><path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/></svg>
+                    Approve
+                  </button>
+                  <button id="btn-regenerate" type="button"
+                    class="btn-ghost text-xs inline-flex items-center gap-1.5">
+                    <svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5 opacity-70"><path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" clip-rule="evenodd"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg>
+                    Regenerate
+                  </button>
+                  <button id="btn-send" type="button"
+                    class="ml-auto btn-coral text-xs inline-flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="h-3.5 w-3.5"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+                    Send Now
+                  </button>
+                </div>
+
+              </div>
+
+            </section>
+          </div>
+        </div><!-- /person-root -->
+      </div>
+    </main>
+
+    <script>
+    (function () {
+      'use strict';
+
+      // ── Helpers ──────────────────────────────────────────────────────────────
+      function esc(s) {
+        return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      }
+
+      function relTime(iso) {
+        if (!iso) return '';
+        const t = new Date(iso.replace(' ', 'T') + 'Z');
+        const d = Math.floor((Date.now() - t.getTime()) / 1000);
+        if (d < 60)   return `${d}s ago`;
+        if (d < 3600) return `${Math.floor(d/60)}m ago`;
+        if (d < 86400) return `${Math.floor(d/3600)}h ago`;
+        return `${Math.floor(d/86400)}d ago`;
+      }
+
+      async function api(path, opts = {}) {
+        const options = { headers: {}, ...opts };
+        if (options.body && typeof options.body !== 'string' && !(options.body instanceof FormData)) {
+          options.headers['Content-Type'] = 'application/json';
+          options.body = JSON.stringify(options.body);
+        }
+        const r = await fetch(path, options);
+        const text = await r.text();
+        const data = text ? (() => { try { return JSON.parse(text); } catch { return null; } })() : null;
+        if (!r.ok) throw new Error((data?.error?.message) || r.statusText || `HTTP ${r.status}`);
+        return data;
+      }
+
+      function statusPill(p) {
+        if (p.sent_at) {
+          return p.replied
+            ? '<span class="chip chip-done" style="color:rgb(var(--sky));">replied</span>'
+            : '<span class="chip chip-done">sent</span>';
+        }
+        if (!p.draft_id) return '<span class="chip chip-cold">no draft</span>';
+        const s = p.draft_status || 'draft';
+        const map = {
+          draft:    'chip-cold',
+          approved: 'chip-warm',
+          queued:   'chip-live',
+          sent:     'chip-done',
+          skipped:  'chip-skip',
+          failed:   'chip-skip',
+        };
+        return `<span class="chip ${map[s]||'chip-cold'}">${esc(s)}</span>`;
+      }
+
+      function warningChip(w) {
+        return `<span class="inline-flex rounded-full px-2 py-0.5 text-[0.65rem] font-medium bg-amber-900/40 text-amber-200">${esc(w)}</span>`;
+      }
+
+      // ── State ─────────────────────────────────────────────────────────────────
+      const m = location.pathname.match(/^\/companies\/([^/]+)\/people\/(\d+)/);
+      if (!m) {
+        document.querySelector('#loading').textContent = 'Invalid URL.';
+        return;
+      }
+      const slug = decodeURIComponent(m[1]);
+      const contactId = Number(m[2]);
+      let company = null;
+      let person  = null;  // the people-with-drafts row
+
+      // ── Render ────────────────────────────────────────────────────────────────
+      function renderPerson() {
+        if (!person) return;
+        document.title = `${person.full_name || 'Person'} · ${company.name}`;
+
+        // Breadcrumbs
+        const crumbCompany = document.querySelector('#crumb-company');
+        crumbCompany.textContent = company.name;
+        crumbCompany.href = `/companies/${esc(company.slug)}`;
+        const crumbPeople = document.querySelector('#crumb-people');
+        crumbPeople.href = `/companies/${esc(company.slug)}`;
+        crumbPeople.textContent = 'People';
+        document.querySelector('#crumb-person').textContent = person.full_name || '(unnamed)';
+
+        // Left card
+        document.querySelector('#person-name').textContent  = person.full_name || '(unnamed)';
+        document.querySelector('#person-title').textContent = [person.title, person.seniority].filter(Boolean).join(' · ') || '—';
+        document.querySelector('#person-status-badge').innerHTML = statusPill(person);
+        document.querySelector('#person-email').textContent = person.email || '—';
+        const senRow = document.querySelector('#person-seniority-row');
+        if (person.seniority) {
+          document.querySelector('#person-seniority').textContent = person.seniority;
+        } else {
+          senRow.classList.add('hidden');
+        }
+        if (person.linkedin_url) {
+          const liRow = document.querySelector('#person-linkedin-row');
+          liRow.classList.remove('hidden');
+          const liA = document.querySelector('#person-linkedin');
+          liA.href = person.linkedin_url.startsWith('http') ? person.linkedin_url : `https://${person.linkedin_url}`;
+          liA.textContent = person.linkedin_url.replace(/^https?:\/\/(www\.)?/, '');
+        }
+        if (person.sent_at) {
+          document.querySelector('#sent-info').classList.remove('hidden');
+          document.querySelector('#sent-line').textContent =
+            `Sent ${relTime(person.sent_at)}${person.replied ? ' · they replied — you got this' : ''}`;
+        }
+
+        // Navigation links
+        document.querySelector('#back-people').href  = `/companies/${esc(company.slug)}`;
+        document.querySelector('#open-wizard').href  = `/companies/${esc(company.slug)}/review`;
+
+        // Show appropriate panel
+        if (!person.draft_id) {
+          document.querySelector('#no-draft-panel').classList.remove('hidden');
+        } else {
+          renderDraftPanel();
+        }
+
+        document.querySelector('#loading').classList.add('hidden');
+        document.querySelector('#person-root').classList.remove('hidden');
+      }
+
+      function renderDraftPanel() {
+        if (!person.draft_id) return;
+        document.querySelector('#no-draft-panel').classList.add('hidden');
+        const panel = document.querySelector('#draft-panel');
+        panel.classList.remove('hidden');
+
+        // Status + warnings + tokens
+        const map = { draft:'chip-cold', approved:'chip-warm', queued:'chip-live', sent:'chip-done', skipped:'chip-skip', failed:'chip-skip' };
+        const s = person.draft_status || 'draft';
+        document.querySelector('#draft-status-badge').innerHTML =
+          `<span class="chip ${map[s]||'chip-cold'}">${esc(s)}</span>` +
+          (person.replied ? `<span class="chip chip-done ml-1" style="color:rgb(var(--sky));">replied</span>` : '');
+
+        const warnings = Array.isArray(person.quality_warnings)
+          ? person.quality_warnings
+          : parseWarnings(person.quality_warnings_json);
+        const warnEl = document.querySelector('#draft-warnings');
+        warnEl.innerHTML = warnings.length
+          ? warnings.map(warningChip).join('')
+          : '<span class="text-xs" style="color:rgb(var(--emerald));">✓ no warnings</span>';
+
+        const toks = document.querySelector('#draft-tokens');
+        const inTok  = person.llm_input_tokens  ?? person.draft_input_tokens  ?? 0;
+        const outTok = person.llm_output_tokens ?? person.draft_output_tokens ?? 0;
+        if (inTok || outTok) {
+          toks.textContent = `tokens: ${inTok} in · ${outTok} out`;
+        }
+
+        // Subject + body
+        const subjEl = document.querySelector('#draft-subject');
+        const bodyEl = document.querySelector('#draft-body');
+        subjEl.value = person.draft_subject || '';
+        bodyEl.value = person.draft_body    || '';
+
+        // Lock if sent
+        const isSent = s === 'sent';
+        subjEl.disabled = isSent;
+        bodyEl.disabled = isSent;
+        document.querySelector('#btn-save').disabled     = isSent;
+        document.querySelector('#btn-approve').disabled  = isSent || s === 'approved';
+        document.querySelector('#btn-send').disabled     = s !== 'approved';
+
+        if (isSent) {
+          subjEl.style.opacity = '0.6';
+          bodyEl.style.opacity = '0.6';
+        }
+      }
+
+      function parseWarnings(raw) {
+        if (!raw) return [];
+        if (Array.isArray(raw)) return raw;
+        try { const v = JSON.parse(raw); return Array.isArray(v) ? v : []; } catch { return []; }
+      }
+
+      // ── Actions ───────────────────────────────────────────────────────────────
+      function setActionError(msg) {
+        document.querySelector('#draft-action-error').textContent = msg || '';
+      }
+
+      function setButtonState(btnId, busy, busyLabel) {
+        const btn = document.querySelector(`#${btnId}`);
+        if (!btn) return;
+        btn.disabled = busy;
+        if (busy && busyLabel) {
+          btn._origHtml = btn.innerHTML;
+          btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" class="h-3.5 w-3.5 spin"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" opacity=".25"/><path d="M14 8a6 6 0 0 1-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>${esc(busyLabel)}</span>`;
+        } else if (!busy && btn._origHtml) {
+          btn.innerHTML = btn._origHtml;
+          btn._origHtml = null;
+        }
+      }
+
+      async function reloadPerson() {
+        const data = await api(`/api/companies/${company.id}/people-with-drafts`);
+        const fresh = (data.people || []).find(x => x.contact_id === contactId);
+        if (fresh) {
+          person = fresh;
+          // Update status badge and re-render draft panel
+          document.querySelector('#person-status-badge').innerHTML = statusPill(person);
+          renderDraftPanel();
+        }
+      }
+
+      async function doSave() {
+        setActionError('');
+        setButtonState('btn-save', true, 'Saving…');
+        try {
+          const subject = document.querySelector('#draft-subject').value.trim();
+          const body    = document.querySelector('#draft-body').value.trim();
+          await api(`/api/drafts/${person.draft_id}`, { method: 'PUT', body: { subject, body } });
+          // Update local state
+          person.draft_subject = subject;
+          person.draft_body    = body;
+          // Brief flash
+          const btn = document.querySelector('#btn-save');
+          if (btn) { btn._origHtml = null; btn.innerHTML = '✓ Saved'; }
+          setTimeout(() => { const b = document.querySelector('#btn-save'); if (b && b.textContent === '✓ Saved') b.innerHTML = `<svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5 opacity-70"><path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4.5L10.5 1H2zm0 1h8v3.5H13V14H3V2h-.5L2 2zm8.5 0l2 2H10.5V2z"/></svg> Save`; }, 1800);
+        } catch (err) {
+          setActionError(err.message);
+        } finally {
+          setButtonState('btn-save', false);
+        }
+      }
+
+      async function doApprove() {
+        setActionError('');
+        setButtonState('btn-approve', true, 'Approving…');
+        try {
+          // Auto-save any unsaved edits first
+          const subject = document.querySelector('#draft-subject').value.trim();
+          const body    = document.querySelector('#draft-body').value.trim();
+          if (subject !== person.draft_subject || body !== person.draft_body) {
+            await api(`/api/drafts/${person.draft_id}`, { method: 'PUT', body: { subject, body } });
+          }
+          await api(`/api/drafts/${person.draft_id}/approve`, { method: 'POST' });
+          await reloadPerson();
+        } catch (err) {
+          setActionError(err.message);
+        } finally {
+          setButtonState('btn-approve', false);
+        }
+      }
+
+      async function doRegenerate() {
+        setActionError('');
+        setButtonState('btn-regenerate', true, 'Regenerating…');
+        try {
+          await api(`/api/drafts/${person.draft_id}/regenerate`, { method: 'POST' });
+          await reloadPerson();
+        } catch (err) {
+          setActionError(err.message);
+        } finally {
+          setButtonState('btn-regenerate', false);
+        }
+      }
+
+      async function doSend() {
+        if (person.draft_status !== 'approved') {
+          setActionError('Approve the draft before sending.');
+          return;
+        }
+        if (!confirm(`Send to ${person.email}? This dispatches a real email through Gmail right now.`)) return;
+        setActionError('');
+        setButtonState('btn-send', true, 'Sending…');
+        try {
+          await api(`/api/send/draft/${person.draft_id}`, { method: 'POST' });
+          await reloadPerson();
+        } catch (err) {
+          setActionError(err.message);
+        } finally {
+          setButtonState('btn-send', false);
+        }
+      }
+
+      async function doGenerate() {
+        const statusEl = document.querySelector('#generate-status');
+        setButtonState('btn-generate', true, 'Generating…');
+        if (statusEl) statusEl.textContent = 'AI is writing your draft… (~10–20s)';
+        try {
+          await api('/api/drafts/generate-batch', {
+            method: 'POST',
+            body: { company_id: company.id, only_missing: true },
+          });
+          await reloadPerson();
+          if (!person.draft_id) {
+            if (statusEl) statusEl.textContent = 'Generation completed but no draft was created — check server logs.';
+          }
+        } catch (err) {
+          if (statusEl) statusEl.textContent = err.message;
+          setButtonState('btn-generate', false);
+        }
+      }
+
+      // ── Bind events ───────────────────────────────────────────────────────────
+      function bindActions() {
+        document.querySelector('#btn-save')?.addEventListener('click', doSave);
+        document.querySelector('#btn-approve')?.addEventListener('click', doApprove);
+        document.querySelector('#btn-regenerate')?.addEventListener('click', doRegenerate);
+        document.querySelector('#btn-send')?.addEventListener('click', doSend);
+        document.querySelector('#btn-generate')?.addEventListener('click', doGenerate);
+      }
+
+      // ── Load ──────────────────────────────────────────────────────────────────
+      async function load() {
+        try {
+          company = await api(`/api/companies/by-slug/${encodeURIComponent(slug)}`);
+          const data = await api(`/api/companies/${company.id}/people-with-drafts`);
+          person = (data.people || []).find(x => x.contact_id === contactId);
+          if (!person) throw new Error('Contact not found in this campaign.');
+          bindActions();
+          renderPerson();
+        } catch (err) {
+          document.querySelector('#loading').classList.add('hidden');
+          const e = document.querySelector('#error');
+          e.textContent = err.message;
+          e.classList.remove('hidden');
+        }
+      }
+
+      load();
+    })();
+    </script>
+  </body>
+</html>

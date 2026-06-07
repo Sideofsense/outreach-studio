@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Outreach Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' };</script>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="page-frame antialiased">
+
+    <!-- decorative blobs -->
+    <div class="blob blob-coral blob-drift pointer-events-none" style="width:600px;height:600px;top:-200px;right:-200px;opacity:0.22;"></div>
+    <div class="blob blob-violet blob-drift pointer-events-none" style="width:500px;height:500px;bottom:-200px;left:-180px;opacity:0.18;animation-delay:-9s;"></div>
+
+    <!-- HEADER -->
+    <header class="flex-none border-b border-white/5 bg-[rgb(11,13,22)]/70 backdrop-blur-xl z-10 relative">
+      <div class="flex items-center justify-between px-8 py-3">
+        <a href="/" class="flex items-center gap-2.5 text-sm font-semibold tracking-tight">
+          <span class="relative inline-flex h-6 w-6 items-center justify-center rounded-lg" style="background:linear-gradient(135deg,rgb(255,138,101),rgb(244,96,54));">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 text-white" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          </span>
+          <span>Outreach Studio</span>
+        </a>
+        <nav class="flex items-center gap-1">
+          <a href="/" class="nav-link active">Home</a>
+          <a href="/companies.html" class="nav-link">Companies</a>
+          <a href="/log.html" class="nav-link">Log</a>
+          <a href="/settings.html" class="nav-link">Settings</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- MAIN: single column -->
+    <main class="flex-1 scroll-y relative">
+      <div class="dot-grid-overlay pointer-events-none"></div>
+
+      <!-- floating paper plane -->
+      <div class="plane-drift pointer-events-none absolute top-8 right-12" style="width:130px;height:115px;" aria-hidden="true">
+        <svg viewBox="0 0 130 115" fill="none" class="w-full h-full">
+          <path d="M 10 72 L 118 14 L 88 96 Z" fill="rgba(255,138,101,0.14)" stroke="rgb(255,138,101)" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M 88 96 L 62 55 L 10 72" fill="rgba(255,138,101,0.06)" stroke="rgba(255,138,101,0.45)" stroke-width="1.1" stroke-linejoin="round"/>
+          <circle cx="4" cy="75" r="2.5" fill="rgba(255,138,101,0.3)"/>
+          <circle cx="0" cy="80" r="1.5" fill="rgba(255,138,101,0.18)"/>
+          <circle cx="121" cy="12" r="6" stroke="rgba(255,138,101,0.28)" stroke-width="1.1" fill="none"/>
+          <circle cx="121" cy="12" r="11" stroke="rgba(255,138,101,0.13)" stroke-width="1.1" fill="none"/>
+        </svg>
+      </div>
+
+      <div class="relative max-w-3xl mx-auto px-10 pt-12 pb-8 flex flex-col gap-12">
+
+        <!-- Hero -->
+        <section class="slide-in" aria-label="Intro">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="eyebrow" style="color:rgb(var(--coral-soft));">v0.1 · your job hunt, your rules</span>
+            <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.6rem] font-semibold"
+              style="background:rgba(52,211,153,0.1); border:1px solid rgba(52,211,153,0.2); color:rgb(var(--emerald));">
+              <span class="live-dot" style="color:rgb(var(--emerald));"></span>
+              live
+            </span>
+          </div>
+          <h1 class="text-5xl font-semibold tracking-tight leading-[1.05]">
+            One good email<br>
+            <span class="text-coral">away from it.</span>
+          </h1>
+          <p class="mt-5 text-sm leading-relaxed max-w-lg" style="color:rgb(var(--ink-muted));">
+            No blast lists. No copy-paste subjects. Just thoughtful, AI-drafted emails to people you actually want to talk to — sent through your own Gmail, one at a time, with you in the loop.
+          </p>
+
+          <!-- CTA row -->
+          <div class="mt-8 flex flex-wrap gap-3 items-center">
+            <button id="home-new-campaign-btn" type="button"
+              class="btn-coral inline-flex items-center gap-2 group">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 transition-transform group-hover:rotate-90 duration-200" aria-hidden="true">
+                <path d="M10 3a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H4a1 1 0 1 1 0-2h5V4a1 1 0 0 1 1-1z"/>
+              </svg>
+              New Campaign
+            </button>
+            <a href="/companies.html" class="btn-ghost inline-flex items-center gap-2">
+              All campaigns
+              <svg viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 opacity-60" aria-hidden="true">
+                <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/>
+              </svg>
+            </a>
+            <a href="/settings.html" class="btn-ghost inline-flex items-center gap-2">
+              Your profile
+            </a>
+          </div>
+
+          <!-- New Campaign — inline searchable panel (replaces the old popup) -->
+          <div id="new-campaign-panel" class="hidden mt-6 rounded-2xl p-5" style="background:rgb(var(--bg-elevated)); border:1px solid rgb(var(--border-strong));">
+            <div class="flex items-center justify-between mb-3">
+              <p class="text-xs font-medium" style="color:rgb(var(--ink-soft));">Search an existing campaign, or name a new one</p>
+              <button id="close-new-campaign-panel" type="button" class="rounded-lg p-1 transition-colors hover:bg-white/[0.06]" style="color:rgb(var(--ink-muted));" aria-label="Close">
+                <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4"><path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"/></svg>
+              </button>
+            </div>
+
+            <div class="relative">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style="color:rgb(var(--ink-faint));"><path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 3.473 9.765l3.131 3.131a.75.75 0 1 0 1.06-1.06l-3.13-3.132A5.5 5.5 0 0 0 9 3.5ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z" clip-rule="evenodd"/></svg>
+              <input id="company-search" type="text" autocomplete="off" placeholder="Type a company name…"
+                class="w-full rounded-lg pl-9 pr-3 py-2.5 text-sm" />
+            </div>
+
+            <ul id="company-search-results" class="mt-3 space-y-1 max-h-60 overflow-y-auto"></ul>
+
+            <form id="new-campaign-form" class="mt-3 hidden space-y-3 border-t border-white/[0.05] pt-4">
+              <p class="text-xs" style="color:rgb(var(--ink-faint));">No campaign named "<span id="nc-name-echo" style="color:rgb(var(--ink-soft));"></span>" yet — add a few details and we'll create it.</p>
+              <input name="name" type="hidden" />
+              <label class="block">
+                <span class="block text-xs font-medium mb-1.5" style="color:rgb(var(--ink-soft));">Company website</span>
+                <input name="company_link" type="url" placeholder="https://…" class="w-full rounded-lg px-3 py-2.5 text-sm" />
+              </label>
+              <div class="grid grid-cols-2 gap-3">
+                <label class="block">
+                  <span class="block text-xs font-medium mb-1.5" style="color:rgb(var(--ink-soft));">Industry</span>
+                  <input name="industry" type="text" placeholder="e.g. Fintech, Dev tools" class="w-full rounded-lg px-3 py-2.5 text-sm" />
+                </label>
+                <label class="block">
+                  <span class="block text-xs font-medium mb-1.5" style="color:rgb(var(--ink-soft));">Key product</span>
+                  <input name="key_products" type="text" placeholder="e.g. Payments API" class="w-full rounded-lg px-3 py-2.5 text-sm" />
+                </label>
+              </div>
+              <label class="block">
+                <span class="block text-xs font-medium mb-1.5" style="color:rgb(var(--ink-soft));">
+                  Why do you want to work here?
+                  <span class="font-normal ml-1" style="color:rgb(var(--ink-faint));">AI uses this to craft the angle</span>
+                </span>
+                <textarea name="custom_context" rows="3" placeholder="e.g. Their infra team built X — maps perfectly to my work on Y…" class="w-full rounded-lg px-3 py-2.5 text-sm leading-relaxed resize-none"></textarea>
+              </label>
+              <p data-role="error" class="text-xs min-h-[1rem]" style="color:rgb(var(--rose));"></p>
+              <div class="flex items-center justify-end">
+                <button type="submit" class="btn-coral text-sm inline-flex items-center gap-2 group">
+                  Create &amp; go to contacts
+                  <svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 011.06 0l3.25 3.25a.75.75 0 010 1.06l-3.25 3.25a.75.75 0 01-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 010-1.06z" clip-rule="evenodd"/></svg>
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- Scoreboard -->
+        <section class="bounce-in" style="animation-delay:120ms;" aria-label="Stats">
+          <p class="eyebrow mb-3">the scoreboard</p>
+          <div id="home-kpis" class="grid grid-cols-3 gap-2 sm:grid-cols-6">
+            <div class="col-span-3 sm:col-span-6 flex items-center gap-2 py-2">
+              <span class="loading-dots" style="color:rgb(var(--ink-muted));"><span></span><span></span><span></span></span>
+              <span class="text-xs" style="color:rgb(var(--ink-faint));">fetching stats</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="flex flex-wrap gap-4 text-xs pb-4" style="color:rgb(var(--ink-faint));">
+          <span>v0.1.0</span>
+          <span style="color:rgb(var(--border-strong));">·</span>
+          <a href="/health" class="hover:text-[rgb(var(--coral-soft))] transition-colors">/health</a>
+          <span style="color:rgb(var(--border-strong));">·</span>
+          <a href="/log.html" class="hover:text-[rgb(var(--coral-soft))] transition-colors">activity &amp; log →</a>
+          <span style="color:rgb(var(--border-strong));">·</span>
+          <span class="italic">90s between sends · 100/day max</span>
+        </footer>
+
+      </div>
+    </main>
+
+    <!-- STOP ALL (fixed, only when sending) -->
+    <button id="home-stop-all" type="button"
+      class="hidden fixed bottom-6 right-6 rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-xl z-50"
+      style="background:rgb(var(--rose)); box-shadow:0 8px 24px -4px rgba(251,113,133,0.5);">
+      STOP ALL
+    </button>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

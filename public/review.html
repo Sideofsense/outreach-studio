@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Review · Outreach Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' };</script>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      .fly-out { animation: fly-out 700ms cubic-bezier(.5,.0,.3,1) forwards; }
+      @keyframes fly-out {
+        0%   { transform: translate(0,0) rotate(0); opacity: 1; }
+        60%  { transform: translate(40vw, -10vh) rotate(-12deg); opacity: 1; }
+        100% { transform: translate(80vw, -30vh) rotate(-20deg); opacity: 0; }
+      }
+      .slide-in { animation: slide-in 320ms cubic-bezier(.2,.7,.3,1) both; }
+      @keyframes slide-in {
+        from { transform: translateY(12px); opacity: 0; }
+        to   { transform: translateY(0);    opacity: 1; }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen antialiased">
+    <header class="border-b border-white/5 bg-[rgb(11,13,22)]/60 backdrop-blur-xl">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+        <a href="/" class="flex items-center gap-2.5 text-sm font-semibold tracking-tight">
+          <span class="relative inline-flex h-6 w-6 items-center justify-center rounded-lg" style="background:linear-gradient(135deg,rgb(255,138,101),rgb(244,96,54));">
+            <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 text-white" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          </span>
+          <span>Outreach Studio</span>
+        </a>
+        <nav class="flex items-center gap-1">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/companies.html" class="nav-link active">Companies</a>
+          <a href="/log.html" class="nav-link">Log</a>
+          <a href="/settings.html" class="nav-link">Settings</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-3xl px-6 py-8">
+      <p class="crumb">
+        <a href="/companies.html">Companies</a>
+        <span class="crumb-sep">/</span>
+        <a id="back-link" href="/companies.html" class="hover:text-[rgb(var(--coral-soft))]">…</a>
+        <span class="crumb-sep">/</span>
+        <span>Review</span>
+      </p>
+
+      <div id="loading" class="mt-6 text-[rgb(var(--ink-muted))]">Loading the next draft…</div>
+      <div id="error" class="mt-6 hidden rounded-md border border-rose-800 bg-rose-950/40 px-4 py-3 text-rose-200"></div>
+
+      <section id="wizard" class="mt-6 hidden slide-in">
+        <header class="flex items-end justify-between">
+          <div>
+            <h1 id="wizard-title" class="text-2xl font-semibold tracking-tight"></h1>
+            <p id="wizard-sub" class="mt-1 text-sm text-[rgb(var(--ink-muted))]"></p>
+          </div>
+          <div class="text-right text-xs text-[rgb(var(--ink-faint))]">
+            <div id="wizard-progress-text"></div>
+            <div class="mt-1 h-1.5 w-48 overflow-hidden rounded-full bg-white/[0.06]">
+              <div id="wizard-progress-bar" class="h-full bg-[rgb(var(--coral))] transition-all duration-500" style="width:0%"></div>
+            </div>
+          </div>
+        </header>
+
+        <article id="card" class="mt-6 card p-6 shadow-xl shadow-black/20">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-xs uppercase tracking-wider text-[rgb(var(--ink-faint))]">To</p>
+              <p class="text-lg font-medium text-[rgb(var(--ink))]" id="contact-line"></p>
+              <p class="text-xs text-[rgb(var(--ink-faint))]" id="contact-meta"></p>
+            </div>
+            <span id="warnings" class="text-xs"></span>
+          </div>
+
+          <!-- Placeholder warning — shown when draft still has {variable} or […] tokens -->
+          <div id="placeholder-warning" class="hidden mb-5 rounded-xl border border-amber-700/60 bg-amber-950/30 px-4 py-3">
+            <p class="text-sm font-semibold text-amber-300">Draft needs editing before sending</p>
+            <p class="mt-0.5 text-xs text-amber-200/80">The AI draft engine didn't run or left gaps. You'll see <code class="rounded bg-amber-900/40 px-1">{placeholders}</code> or <code class="rounded bg-amber-900/40 px-1">[…]</code> in the text. Fill them in manually or hit <strong>Regenerate</strong> to have the AI rewrite this email using your profile and CV.</p>
+          </div>
+
+          <label class="mt-5 block text-xs font-medium uppercase tracking-wider text-[rgb(var(--ink-muted))]">Subject</label>
+          <input id="subject" type="text"
+            class="mt-1 block w-full rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-3 py-2 text-[rgb(var(--ink))] focus:border-[rgb(var(--coral))] focus:outline-none focus:ring-1 focus:ring-[rgb(var(--coral))]" />
+
+          <label class="mt-4 block text-xs font-medium uppercase tracking-wider text-[rgb(var(--ink-muted))]">Body</label>
+          <textarea id="body" rows="14"
+            class="mt-1 block w-full rounded-md border border-slate-700 bg-[rgb(var(--bg))] px-3 py-2 font-mono text-sm leading-6 text-[rgb(var(--ink))] focus:border-[rgb(var(--coral))] focus:outline-none focus:ring-1 focus:ring-[rgb(var(--coral))]"></textarea>
+
+          <div id="attachments-line" class="mt-3 text-xs text-[rgb(var(--ink-faint))]"></div>
+
+          <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex gap-2">
+              <button id="btn-skip" type="button"
+                class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-[rgb(var(--ink-soft))] hover:bg-white/[0.04]">Skip</button>
+              <button id="btn-regen" type="button"
+                class="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-[rgb(var(--ink-soft))] hover:bg-white/[0.04]">Regenerate</button>
+            </div>
+            <button id="btn-send" type="button"
+              class="group relative overflow-hidden rounded-md btn-coral px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-[rgb(var(--coral-deep))]/40 disabled:opacity-40">
+              <span class="inline-flex items-center gap-2">
+                <span>Send</span>
+                <svg id="plane" viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+              </span>
+            </button>
+          </div>
+          <p id="action-error" class="mt-2 text-right text-xs text-rose-400"></p>
+        </article>
+      </section>
+
+      <section id="done" class="mt-6 hidden slide-in">
+        <div class="relative overflow-hidden rounded-2xl border border-emerald-800/50 bg-emerald-950/20 p-12 text-center">
+          <!-- Confetti dots (positioned absolutely, shown via JS) -->
+          <div id="confetti-container" class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true"></div>
+
+          <div class="relative mx-auto flex h-16 w-16 items-center justify-center">
+            <!-- Celebration rings -->
+            <div class="send-ring-1 absolute inset-0 rounded-full border-2 border-emerald-400"></div>
+            <div class="send-ring-2 absolute inset-0 rounded-full border-2 border-emerald-300"></div>
+            <div class="relative flex h-full w-full items-center justify-center rounded-full bg-emerald-900/50">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8 text-emerald-400">
+                <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+              </svg>
+            </div>
+          </div>
+
+          <h2 class="ticker-drop mt-5 text-3xl font-semibold tracking-tight text-[rgb(var(--ink))]">Emails away.</h2>
+          <p id="done-line" class="ticker-drop mt-2 text-sm text-[rgb(var(--ink-soft))]" style="animation-delay:60ms"></p>
+          <p class="ticker-drop mt-1 text-xs text-[rgb(var(--ink-muted))]" style="animation-delay:120ms">Now comes the hardest part: waiting for replies.</p>
+
+          <div class="mt-8 flex justify-center gap-3">
+            <a id="done-back" href="/companies.html"
+              class="inline-flex items-center gap-2 rounded-xl btn-coral px-5 py-2.5 text-sm font-semibold text-white">
+              <svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5"><path fill-rule="evenodd" d="M9.78 11.78a.75.75 0 01-1.06 0L5.47 8.53a.75.75 0 010-1.06l3.25-3.25a.75.75 0 011.06 1.06L7.06 8l2.72 2.72a.75.75 0 010 1.06z" clip-rule="evenodd"/></svg>
+              Back to company
+            </a>
+            <a href="/log.html" class="inline-flex items-center gap-1.5 rounded-xl border border-[rgb(var(--border-strong))] px-4 py-2.5 text-sm text-[rgb(var(--ink-soft))] hover:bg-white/[0.04]">
+              See the paper trail
+              <svg viewBox="0 0 16 16" fill="currentColor" class="h-3.5 w-3.5 opacity-60"><path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 011.06 0l3.25 3.25a.75.75 0 010 1.06l-3.25 3.25a.75.75 0 01-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 010-1.06z" clip-rule="evenodd"/></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        'use strict';
+        const slug = location.pathname.match(/^\/companies\/([^/]+)\/review/)[1];
+        let company = null;
+
+        function $ (s) { return document.querySelector(s); }
+        function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+        // Infer a human label from the stored attachment path. CVs live under
+        // /cvs/, cover letters are saved as "<slug>-coverletter.<ext>", and
+        // everything else under /artifacts/ is a named artifact.
+        function attachmentKind(p) {
+          const low = String(p || '').toLowerCase();
+          const file = low.split('/').pop();
+          if (/cover[-_]?letter/.test(file)) return 'Cover letter';
+          if (low.includes('/cvs/')) return 'CV';
+          if (low.includes('/artifacts/')) return 'Artifact';
+          return 'File';
+        }
+
+        async function api(path, opts = {}) {
+          const o = { headers: {}, ...opts };
+          if (o.body && typeof o.body !== 'string') {
+            o.headers['Content-Type'] = 'application/json';
+            o.body = JSON.stringify(o.body);
+          }
+          const r = await fetch(path, o);
+          const t = await r.text();
+          const d = t ? JSON.parse(t) : null;
+          if (!r.ok) throw new Error((d?.error?.message) || r.statusText);
+          return d;
+        }
+
+        async function load() {
+          $('#loading').classList.remove('hidden');
+          $('#wizard').classList.add('hidden');
+          $('#done').classList.add('hidden');
+          try {
+            if (!company) {
+              company = await api(`/api/companies/by-slug/${slug}`);
+              $('#wizard-title').textContent = company.name;
+              $('#wizard-sub').textContent = company.industry ? `${company.industry} · review and send one at a time` : 'Review and send, one draft at a time.';
+              const backHref = `/companies/${encodeURIComponent(slug)}`;
+              const backLink = $('#back-link');
+              if (backLink) { backLink.href = backHref; backLink.textContent = company.name; }
+              const doneBack = $('#done-back');
+              if (doneBack) { doneBack.href = backHref; }
+            }
+            const data = await api(`/api/drafts/next?company_id=${company.id}`);
+            const c = data.counts || {};
+            const decided = (c.sent||0)+(c.skipped||0);
+            const total = c.total||0;
+            $('#wizard-progress-text').textContent = total ? `${decided} of ${total} done` : 'no drafts yet';
+            const pct = total ? Math.round(decided*100/total) : 0;
+            $('#wizard-progress-bar').style.width = pct+'%';
+
+            if (!data.next) {
+              $('#loading').classList.add('hidden');
+              if (total === 0) {
+                $('#error').innerHTML = 'No drafts yet for this campaign. The AI may not have run successfully.<br><a href="/companies/' + encodeURIComponent(slug) + '" class="underline text-[rgb(var(--coral-soft))]">Go back to the company page</a> and hit "Initiate outreach" again. If the AI keeps failing, check that Ollama is running or your API key is set in <code>.env</code>.';
+                $('#error').classList.remove('hidden');
+              } else {
+                $('#done').classList.remove('hidden');
+                spawnConfetti();
+                $('#done-line').textContent = `${c.sent||0} sent, ${c.skipped||0} skipped${c.approved?` (${c.approved} still approved, use queue mode)`:''}`;
+              }
+              return;
+            }
+            renderDraft(data.next);
+          } catch (err) {
+            $('#loading').classList.add('hidden');
+            $('#error').textContent = err.message;
+            $('#error').classList.remove('hidden');
+          }
+        }
+
+        const PLACEHOLDER_RE = /\{[a-z_]+\}|\[…\]/i;
+
+        function renderDraft(d) {
+          $('#loading').classList.add('hidden');
+          $('#wizard').classList.remove('hidden');
+          $('#wizard').classList.remove('slide-in');
+          void $('#wizard').offsetWidth;
+          $('#wizard').classList.add('slide-in');
+
+          $('#contact-line').textContent = d.contact?.full_name || '(no name)';
+          $('#contact-meta').textContent = [d.contact?.title, d.contact?.seniority, d.contact?.email].filter(Boolean).join(' · ');
+          $('#subject').value = d.subject || '';
+          $('#body').value = d.body || '';
+
+          // Detect unfilled placeholders and show warning banner + highlight Regenerate
+          const hasPlaceholders = PLACEHOLDER_RE.test(d.subject || '') || PLACEHOLDER_RE.test(d.body || '');
+          const warn = $('#placeholder-warning');
+          const regen = $('#btn-regen');
+          if (warn) warn.classList.toggle('hidden', !hasPlaceholders);
+          if (regen) {
+            if (hasPlaceholders) {
+              regen.classList.add('btn-coral');
+              regen.classList.remove('border-slate-700');
+              regen.textContent = '✦ Regenerate with AI';
+            } else {
+              regen.classList.remove('btn-coral');
+              regen.classList.add('border-slate-700');
+              regen.textContent = 'Regenerate';
+            }
+          }
+
+          const w = d.quality_warnings || [];
+          const filtered = w.filter(x => x !== 'unsubstituted_variable'); // shown via banner instead
+          $('#warnings').innerHTML = filtered.length
+            ? filtered.map(x => `<span class="ml-1 inline-flex rounded-full bg-amber-900/50 px-2 py-0.5 text-amber-200">${esc(x)}</span>`).join('')
+            : '<span class="text-emerald-400">looks good</span>';
+          const atts = d.attachments || [];
+          const attEl = $('#attachments-line');
+          if (!atts.length) {
+            attEl.innerHTML = '<span class="text-[rgb(var(--ink-faint))]">No attachments.</span>';
+          } else {
+            attEl.innerHTML =
+              '<p class="mb-1.5 text-xs font-medium uppercase tracking-wider text-[rgb(var(--ink-muted))]">Attachments</p>' +
+              '<div class="flex flex-wrap gap-2">' +
+              atts.map((p) => {
+                const file = p.split('/').pop();
+                const kind = attachmentKind(p);
+                return '<span class="inline-flex items-center gap-1.5 rounded-lg border border-[rgb(var(--border-strong))] bg-white/[0.03] px-2.5 py-1 text-xs">'
+                  + '<span class="rounded bg-[rgb(var(--coral))]/15 px-1.5 py-0.5 font-medium text-[rgb(var(--coral-soft))]">' + esc(kind) + '</span>'
+                  + '<span class="text-[rgb(var(--ink-soft))]">' + esc(file) + '</span>'
+                  + '</span>';
+              }).join('') +
+              '</div>';
+          }
+
+          $('#btn-send').onclick = () => sendCurrent(d);
+          $('#btn-skip').onclick = () => skipCurrent(d);
+          $('#btn-regen').onclick = () => regenCurrent(d);
+        }
+
+        async function saveEdits(d) {
+          const subject = $('#subject').value.trim();
+          const body = $('#body').value.trim();
+          if (subject !== d.subject || body !== d.body) {
+            await api(`/api/drafts/${d.id}`, { method:'PUT', body:{ subject, body } });
+          }
+        }
+
+        async function sendCurrent(d) {
+          const err = $('#action-error'); err.textContent = '';
+          const send = $('#btn-send');
+
+          // Hard block: refuse to send if there are unfilled placeholders
+          const currentSubject = $('#subject').value;
+          const currentBody = $('#body').value;
+          if (PLACEHOLDER_RE.test(currentSubject) || PLACEHOLDER_RE.test(currentBody)) {
+            err.textContent = 'This draft still has unfilled placeholders. Edit them above or hit Regenerate to have the AI rewrite it.';
+            return;
+          }
+
+          send.disabled = true;
+          try {
+            await saveEdits(d);
+            if (d.status !== 'approved') {
+              await api(`/api/drafts/${d.id}/approve`, { method:'POST' });
+            }
+            await api(`/api/send/draft/${d.id}`, { method:'POST' });
+            // satisfying micro-animation
+            const card = $('#card');
+            card.classList.add('fly-out');
+            await new Promise(r => setTimeout(r, 650));
+            card.classList.remove('fly-out');
+            await load();
+          } catch (e) {
+            send.disabled = false;
+            err.textContent = e.message;
+          }
+        }
+
+        async function skipCurrent(d) {
+          try {
+            await api(`/api/drafts/${d.id}/skip`, { method:'POST' });
+            await load();
+          } catch (e) { $('#action-error').textContent = e.message; }
+        }
+
+        async function regenCurrent(d) {
+          const err = $('#action-error'); err.textContent = '';
+          try {
+            await api(`/api/drafts/${d.id}/regenerate`, { method:'POST' });
+            await load();
+          } catch (e) { err.textContent = e.message; }
+        }
+
+        function spawnConfetti() {
+          const container = document.querySelector('#confetti-container');
+          if (!container) return;
+          const colors = ['#FF8A65','#A78BFA','#34D399','#FBB724','#7DD3FC'];
+          for (let i = 0; i < 18; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'confetti-dot';
+            dot.style.cssText = `left:${10+Math.random()*80}%;top:${Math.random()*30}%;background:${colors[i%colors.length]};animation-delay:${Math.random()*0.5}s;animation-duration:${0.9+Math.random()*0.7}s;transform:rotate(${Math.random()*360}deg)`;
+            container.appendChild(dot);
+          }
+        }
+
+        // Keyboard: Cmd/Ctrl+Enter = Send, Esc = Skip
+        document.addEventListener('keydown', (e) => {
+          if ((e.metaKey||e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); $('#btn-send').click(); }
+          if (e.key === 'Escape') { e.preventDefault(); $('#btn-skip').click(); }
+        });
+
+        load();
+      })();
+    </script>
+  </body>
+</html>
